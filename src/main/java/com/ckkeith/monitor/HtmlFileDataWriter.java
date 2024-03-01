@@ -426,17 +426,30 @@ public class HtmlFileDataWriter extends Thread {
 		}
 	}
 
-   public record Dataset(String label, Integer lineTension, String borderColor, String backgroundColor) {}
-   public record Datasets(Object[] datasets) {}
+	public record Datapoint(String t, Integer y) {}
+	public record Dataset(String label, Integer lineTension, String borderColor, String backgroundColor, Object[] data) {}
+	public record Datasets(Object[] datasets) {}
 
-   public Datasets sensordata() {
-	List<Dataset> datasetArray = new ArrayList<Dataset>();
-	Iterator<String> sensorIt = sensorNames.keySet().iterator();
-	while (sensorIt.hasNext()) {
-		String sensorName = sensorIt.next();
-		datasetArray.add(new Dataset(getDisplayNameForSensor(sensorName), 0, 
-							"rgba(" + getNextColor() + ")", "rgba(0, 0, 0, 0.0)"));
+	public Datasets sensordata() {
+		List<Dataset> datasetArray = new ArrayList<Dataset>();
+		Iterator<String> sensorIt = sensorNames.keySet().iterator();
+		while (sensorIt.hasNext()) {
+			String sensorName = sensorIt.next();
+			Set<LocalDateTime> keys = sensorData.keySet();
+			Iterator<LocalDateTime> itr = keys.iterator();
+			List<Datapoint> datapointArray = new ArrayList<Datapoint>();
+			while (itr.hasNext()) {
+				LocalDateTime timestamp = itr.next();
+				ConcurrentSkipListMap<String, String> entries = sensorData.get(timestamp);	
+				String val = entries.get(sensorName);
+				if (val != null && !val.isEmpty()) {
+					datapointArray.add(new Datapoint(timestamp.toString(), Integer.parseInt(val)));
+				}
+			}
+			datasetArray.add(new Dataset(getDisplayNameForSensor(sensorName), 0, 
+								"rgba(" + getNextColor() + ")", "rgba(0, 0, 0, 0.0)",
+								datapointArray.toArray()));
+		}
+		return new Datasets(datasetArray.toArray());
 	}
-	return new Datasets(datasetArray.toArray());
-   }
 }
