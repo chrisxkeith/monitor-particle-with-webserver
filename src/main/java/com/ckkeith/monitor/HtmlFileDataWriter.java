@@ -19,8 +19,6 @@ import java.util.concurrent.ConcurrentSkipListMap;
 
 public class HtmlFileDataWriter extends Thread {
 
-	public record ForSpring(String content) { }
-
 	private AccountMonitor accountMonitor;
 	
 	private ConcurrentSkipListMap<LocalDateTime, ConcurrentSkipListMap<String, String>> sensorData = new ConcurrentSkipListMap<LocalDateTime, ConcurrentSkipListMap<String, String>>();
@@ -428,61 +426,17 @@ public class HtmlFileDataWriter extends Thread {
 		}
 	}
 
-	private void addData(StringBuffer sb, String sensorName) {
-		sb.append("\t\t\t\t\"data\" : [");
-		Set<LocalDateTime> keys = sensorData.keySet();
-		Iterator<LocalDateTime> itr = keys.iterator();
-		boolean first = true;
-		while (itr.hasNext()) {
-			LocalDateTime timestamp = itr.next();
-			ConcurrentSkipListMap<String, String> entries = sensorData.get(timestamp);
+   public record Dataset(String label, Integer lineTension, String borderColor, String backgroundColor) {}
+   public record Datasets(Object[] datasets) {}
 
-			String val = entries.get(sensorName);
-			if (val != null && !val.isEmpty()) {
-				StringBuilder sb2 = new StringBuilder();
-				if (!first) {
-					sb2.append(",");
-				} else {
-					first = false;
-				}
-				sb2.append("{ \"t\" : \"").append(timestamp).append("\", \"y\" : " + val + "}");
-				sb.append(sb2.toString());
-			}
-		}
-		sb.append("\t\t\t\t]");
+   public Datasets sensordata() {
+	List<Dataset> datasetArray = new ArrayList<Dataset>();
+	Iterator<String> sensorIt = sensorNames.keySet().iterator();
+	while (sensorIt.hasNext()) {
+		String sensorName = sensorIt.next();
+		datasetArray.add(new Dataset(getDisplayNameForSensor(sensorName), 0, 
+							"rgba(" + getNextColor() + ")", "rgba(0, 0, 0, 0.0)"));
 	}
-
-   public String sensorData() {
-		StringBuffer sb = new StringBuffer();
-		colorIndex = 0;
-		sb.append("\t{ \"datasets\" : ");
-		sb.append("\t\t[");
-
-		Iterator<String> sensorIt = sensorNames.keySet().iterator();
-		Boolean firstSensor = true;
-		while (sensorIt.hasNext()) {
-			String sensorName = sensorIt.next();
-			StringBuilder sb1 = new StringBuilder("\t\t\t");
-			if (firstSensor) {
-				firstSensor = false;
-			} else {
-				sb1.append(" , ");
-			}
-			sb1.append("{ \"label\" : \"");
-			sb1.append(getDisplayNameForSensor(sensorName)).append("\",");
-			sb.append(sb1.toString());
-			sb.append("\"lineTension\" : 0,");
-			sb.append("\t\t\t\"borderColor\" : \"rgba(" + getNextColor() + ")\",");
-			sb.append("\t\t\t\"backgroundColor\" : \"rgba(0, 0, 0, 0.0)\",");
-			addData(sb, sensorName);
-			sb.append("\t\t\t}");
-			sb.append("\t\t]");
-			sb.append( "\t}");
-		}
-		return sb.toString();
-   }
-
-   public ForSpring sensordata() {
-	   return new ForSpring(sensorData());
+	return new Datasets(datasetArray.toArray());
    }
 }

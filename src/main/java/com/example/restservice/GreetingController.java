@@ -20,7 +20,7 @@ public class GreetingController {
 		return new Greeting(counter.incrementAndGet(), String.format(template, name));
 	}
 	@GetMapping("/sensordata")
-	public HtmlFileDataWriter.ForSpring greeting_() {
+	public HtmlFileDataWriter.Datasets sensordata() {
 		return writer.sensordata();
 	}
 }
