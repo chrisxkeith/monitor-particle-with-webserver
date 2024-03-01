@@ -17,10 +17,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentSkipListMap;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-@RestController
 public class HtmlFileDataWriter extends Thread {
 
 	public record ForSpring(String content) { }
@@ -486,7 +482,6 @@ public class HtmlFileDataWriter extends Thread {
 		return sb.toString();
    }
 
-   @GetMapping("/sensordata")
    public ForSpring sensordata() {
 	   return new ForSpring(sensorData());
    }

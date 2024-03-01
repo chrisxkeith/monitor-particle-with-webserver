@@ -10,6 +10,8 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import com.example.restservice.GreetingController;
+
 public class AccountMonitor extends Thread {
 
 	String accessToken = null;
@@ -88,6 +90,7 @@ public class AccountMonitor extends Thread {
 		if (htmlFileDataWriter == null && runParams.htmlWriteIntervalInSeconds > 0) {
 			htmlFileDataWriter = new HtmlFileDataWriter(this);
 			htmlFileDataWriter.start();
+			GreetingController.writer = htmlFileDataWriter;
 		}
 	}
 	void startDeviceMonitors() {
