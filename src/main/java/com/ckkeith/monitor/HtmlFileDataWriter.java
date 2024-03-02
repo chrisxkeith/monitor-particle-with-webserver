@@ -102,7 +102,7 @@ public class HtmlFileDataWriter extends Thread {
 																deviceSensorNames[1]);
 	}
 
-	private LocalDateTime[] findTimeLimits() throws Exception {
+	private LocalDateTime[] findTimeLimits() {
 		LocalDateTime min = LocalDateTime.MAX;
 		LocalDateTime max = LocalDateTime.MIN;
 		Set<LocalDateTime> keys = sensorData.keySet();
@@ -426,9 +426,14 @@ public class HtmlFileDataWriter extends Thread {
 		}
 	}
 
-	public record Datapoint(String t, Integer y) {}
-	public record Dataset(String label, Integer lineTension, String borderColor, String backgroundColor, Object[] data) {}
-	public record Datasets(Object[] datasets) {}
+	private record Animation(Integer duration) {}
+	private record TimeRecord(String min, String max) {}
+	private record Axis(String type, TimeRecord time, Boolean display, String labelString) {}
+	private record Scales(Axis[] xAxis, Axis[] yAxis) {}
+	private record Options(Boolean responsive, Animation animation, Scales scales) {}
+	private record Datapoint(String t, Integer y) {}
+	private record Dataset(String label, Integer lineTension, String borderColor, String backgroundColor, Object[] data) {}
+	public record Datasets(Object[] datasets, Options options) {}
 
 	public Datasets sensordata() {
 		List<Dataset> datasetArray = new ArrayList<Dataset>();
@@ -450,6 +455,20 @@ public class HtmlFileDataWriter extends Thread {
 								"rgba(" + getNextColor() + ")", "rgba(0, 0, 0, 0.0)",
 								datapointArray.toArray()));
 		}
-		return new Datasets(datasetArray.toArray());
+		LocalDateTime limits[] = findTimeLimits();
+		LocalDateTime max = LocalDateTime.now();
+		if (max.isBefore(limits[1])) {
+			max = limits[1];
+		}
+		TimeRecord minMax = new TimeRecord(	Utils.googleSheetsDateFormat.format(limits[0]),
+											Utils.googleSheetsDateFormat.format(max));
+		Axis[] xAxis = new Axis[1];
+		xAxis[0] = new Axis("time", minMax, true, "");
+		Axis[] yAxis = new Axis[1];
+		yAxis[0] = new Axis("", null, true, "");
+		Scales scales = new Scales(xAxis, yAxis);
+		Animation animation = new Animation(0);
+		Options options = new Options(false, animation, scales);
+		return new Datasets(datasetArray.toArray(), options);
 	}
 }
