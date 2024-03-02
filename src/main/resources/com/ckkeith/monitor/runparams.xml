@@ -1,0 +1,47 @@
+<!-- This may or may not be up-to-date. Caveat emptor. -->
+<!-- ~/Documents/Github/monitor-particle-using-api/scripts/run.sh --> 
+<doc>
+    <sheets>
+         <sheet>
+            <!-- From the Google sheet URL. -->
+            <sheetId>12IljsD75CPTJ1iRIDZ97o-0JUEQOxY6cNgMRt0MAibY</sheetId>
+            <!-- How often the server will update the sheet. Also data granularity. -->
+            <writeIntervalInSeconds>60</writeIntervalInSeconds>
+            <!-- The full time data range of the sheet. --> 
+            <dataIntervalInMinutes>600</dataIntervalInMinutes>
+            <htmlWriteIntervalInSeconds>5</htmlWriteIntervalInSeconds>
+            <dataSet> 
+                <microcontrollerName>photon-01</microcontrollerName>
+                <sensors>
+                    <sensor>
+                        <!-- Name as reported by the microcontroller. -->
+                        <name>vibration</name>
+                        <!-- Name as displayed in the column header in the Google Sheet. -->
+                        <displayName>vibration</displayName>
+                    </sensor>
+                </sensors>
+            </dataSet>
+            <dataSet> 
+                <microcontrollerName>photon-09</microcontrollerName>
+                <sensors>
+                    <sensor>
+                        <!-- Name as reported by the microcontroller. -->
+                        <name>vibration</name>
+                        <!-- Name as displayed in the column header in the Google Sheet. -->
+                        <displayName>vibration</displayName>
+                    </sensor>
+                </sensors>
+            </dataSet>
+                <microcontrollerName>photon-08</microcontrollerName>
+                <sensors>
+                    <sensor>
+                        <!-- Name as reported by the microcontroller. -->
+                        <name>vibration</name>
+                        <!-- Name as displayed in the column header in the Google Sheet. -->
+                        <displayName>vibration</displayName>
+                    </sensor>
+                </sensors>
+            </dataSet>
+        </sheet>
+    </sheets>
+</doc>
