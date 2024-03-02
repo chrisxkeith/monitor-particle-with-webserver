@@ -282,13 +282,15 @@ public class Utils {
 	}
 
 	public static void displayEnv() {
-		ArrayList<String> envVars = new ArrayList<String>();
-		for (String key : System.getenv().keySet()) {
-			envVars.add(key + "=" + System.getenv(key));
-		}
-		Collections.sort(envVars);
-		for (String e : envVars) {
-			Utils.logToConsole(e);
+		if (isDebug) {
+			ArrayList<String> envVars = new ArrayList<String>();
+			for (String key : System.getenv().keySet()) {
+				envVars.add(key + "=" + System.getenv(key));
+			}
+			Collections.sort(envVars);
+			for (String e : envVars) {
+				Utils.logToConsole(e);
+			}
 		}
 	}
 

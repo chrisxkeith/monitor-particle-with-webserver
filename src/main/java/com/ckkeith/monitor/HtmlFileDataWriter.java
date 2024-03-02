@@ -423,13 +423,13 @@ public class HtmlFileDataWriter extends Thread {
 	}
 
 	public void run() {
-		Utils.logToConsole("HtmlFileDataWriter thread starting.");
 		try {
 			Utils.logToConsole("writeCSV : " + getCSVFileName());
 			String safeFn = getHTMLFileName(null);
 			String fileName = Utils.getLogFileName(accountMonitor.accountName, safeFn + "NNN.html");
 			fileName = fileName.replace("NNN", "000");
 			Utils.logToConsole("writeHTML: " + fileName);
+			Utils.logToConsole("http://localhost:8080/sensordata");
 			while (true) {
 				fillEmpty();
 				writeHtml();

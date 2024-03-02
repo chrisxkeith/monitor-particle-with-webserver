@@ -12,9 +12,7 @@ public class Main {
 	public static void run() {
 		Utils.logToConsole("main run starting : " + Utils.getCurrentThreadString());
 		try {
-			if (!Utils.isDebug) {
-				Utils.displayEnv();
-			}
+			Utils.displayEnv();
 			String isRunningFrom;
 			if (Utils.runFromTerminal() || Utils.isDebug) {
 				isRunningFrom = "terminal / debug";

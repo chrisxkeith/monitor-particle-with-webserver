@@ -69,7 +69,9 @@ public class AccountMonitor extends Thread {
 		} else {
 			loadParamsFromFile();
 		}
-		Utils.logToConsole(accountName + ": " + runParams.toString());
+		if (Utils.isDebug) {
+			Utils.logToConsole(accountName + ": " + runParams.toString());
+		}
 	}
 
 	private String getParamFilePath(String fn) throws Exception {
