@@ -428,8 +428,9 @@ public class HtmlFileDataWriter extends Thread {
 
 	private record Animation(Integer duration) {}
 	private record TimeRecord(String min, String max) {}
-	private record Axis(String type, TimeRecord time, Boolean display, String labelString) {}
-	private record Scales(Axis[] xAxis, Axis[] yAxis) {}
+	private record TimeAxis(String type, TimeRecord time, Boolean display, String labelString) {}
+	private record Axis(Boolean display, String labelString) {}
+	private record Scales(TimeAxis[] xAxes, Axis[] yAxes) {}
 	private record Options(Boolean responsive, Animation animation, Scales scales) {}
 	private record Datapoint(String t, Integer y) {}
 	private record Dataset(String label, Integer lineTension, String borderColor, String backgroundColor, Object[] data) {}
@@ -462,10 +463,10 @@ public class HtmlFileDataWriter extends Thread {
 		}
 		TimeRecord minMax = new TimeRecord(	Utils.googleSheetsDateFormat.format(limits[0]),
 											Utils.googleSheetsDateFormat.format(max));
-		Axis[] xAxis = new Axis[1];
-		xAxis[0] = new Axis("time", minMax, true, "");
+		TimeAxis[] xAxis = new TimeAxis[1];
+		xAxis[0] = new TimeAxis("time", minMax, true, "");
 		Axis[] yAxis = new Axis[1];
-		yAxis[0] = new Axis("", null, true, "");
+		yAxis[0] = new Axis(true, "");
 		Scales scales = new Scales(xAxis, yAxis);
 		Animation animation = new Animation(0);
 		Options options = new Options(false, animation, scales);
