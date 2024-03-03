@@ -23,41 +23,18 @@ public class RunParams {
 	public class SheetConfig {
 		public Integer				dataIntervalInMinutes = 20;
 		public Integer				writeIntervalInSeconds = 10;
-		public Integer				expectedDataIntervalInSeconds = writeIntervalInSeconds;
-		Boolean						missingDataShowsBlank = false;
 		public ArrayList<Dataset>	dataSets;
-		public String				sheetName;
 	};
 
 	Integer		htmlWriteIntervalInSeconds = 5;
 	public int	dataIntervalInMinutes = 10;
-	String		devicesToReport = "";
-	Integer		csvTimeGranularityInSeconds = 300; // E.g. '60' == round to minutes, '30' == round to minutes and half-minutes.
-	Boolean		writeLongTermData = false;
 	Hashtable<String, SheetConfig> sheets = new Hashtable<String, SheetConfig>();
-	int			temperatureLimit = 90; // degrees F
-	int			timeLimit = 60; // minutes before alert is logged.
-	String		emailTo = "chris.keith@gmail.com";
-	Integer		gapTriggerInMinutes = 10; // Display gaps in the data if they are longer than this.
-	Integer		daysOfGapData = 30; // Go back this many days for gap data.
-	Boolean		missingDataShowsBlank = false;
 
-	 // If temperature doesn't go down (after sending email) in resendIntervalInMinutes,
-	 // keep resending emails until it does.
-	 Integer	resendIntervalInMinutes = 10;
-			
+
 	private static Integer getInteger(Element root, String name, Integer defaultValue) {
 		NodeList nl = root.getElementsByTagName(name);
 		if (nl.getLength() > 0) {
 			return Integer.parseInt(nl.item(0).getTextContent());
-		}
-		return defaultValue;
-	}
-
-	private static String getString(Element root, String name, String defaultValue) {
-		NodeList nl = root.getElementsByTagName(name);
-		if (nl.getLength() > 0) {
-			return nl.item(0).getTextContent();
 		}
 		return defaultValue;
 	}
@@ -111,11 +88,6 @@ public class RunParams {
 		sheetConfig.dataSets = buildDatasetList(datasetElems);
 		sheetConfig.dataIntervalInMinutes = Integer.valueOf(getNodeList(sheetElement, "dataIntervalInMinutes").item(0).getTextContent());
 		sheetConfig.writeIntervalInSeconds = Integer.valueOf(getNodeList(sheetElement, "writeIntervalInSeconds").item(0).getTextContent());
-		sheetConfig.expectedDataIntervalInSeconds = getInteger(sheetElement, "expectedDataIntervalInSeconds", sheetConfig.writeIntervalInSeconds);
-		NodeList blankDataNodeList = sheetElement.getElementsByTagName("missingDataShowsBlank");
-		if (blankDataNodeList.getLength() > 0) {
-			sheetConfig.missingDataShowsBlank = Boolean.valueOf(blankDataNodeList.item(0).getTextContent());
-		}
 		return sheetConfig;
 	}
 
@@ -147,15 +119,6 @@ public class RunParams {
 	private static RunParams loadFromDOM(Element root) throws Exception {
 		RunParams rp = new RunParams();
 		rp.htmlWriteIntervalInSeconds = getInteger(root, "htmlWriteIntervalInSeconds", rp.htmlWriteIntervalInSeconds);
-		rp.csvTimeGranularityInSeconds = getInteger(root, "csvTimeGranularityInSeconds", rp.csvTimeGranularityInSeconds);
-		rp.writeLongTermData = getInteger(root, "writeLongTermData", 0) == 0 ? false : true;
-		rp.devicesToReport = getString(root, "devicesToReport", rp.devicesToReport);
-		rp.temperatureLimit = getInteger(root, "temperatureLimit", 80);
-		rp.timeLimit = getInteger(root, "timeLimit", 60);
-		rp.emailTo = getString(root, "emailTo", "chris.keith@gmail.com");
-		rp.resendIntervalInMinutes = getInteger(root, "resendIntervalInMinutes", 10);
-		rp.gapTriggerInMinutes = getInteger(root, "gapTriggerInMinutes", 10);
-		rp.daysOfGapData = getInteger(root, "daysOfGapData", 30);
 		rp.loadSheets(root);
 		return rp;
 	}
@@ -208,14 +171,6 @@ public class RunParams {
 	public String toString() {
 		return "RunParams : "
 				+ ", htmlWriteIntervalInSeconds = " + htmlWriteIntervalInSeconds
-				+ ", devicesToReport = " + devicesToReport
-				+ ", csvTimeGranularityInSeconds = " + csvTimeGranularityInSeconds
-				+ ", temperatureLimit = " + temperatureLimit
-				+ ", timeLimit = " + timeLimit
-				+ ", emailTo = " + emailTo
-				+ ", resendIntervalInMinutes = " + resendIntervalInMinutes
-				+ ", gapTriggerInMinutes = " + gapTriggerInMinutes
-				+ ", daysOfGapData = " + daysOfGapData
 				;
 	}
 }

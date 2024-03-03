@@ -33,7 +33,7 @@ public class HtmlFileDataWriter extends Thread {
 	public void addData(SensorDataPoint sensorDataPoint) {
 		synchronized (this) {
 			String fullSensorName = sensorDataPoint.deviceName + separator + sensorDataPoint.sensorName;
-			sensorNames.put(fullSensorName, sensorDataPoint.sensorName);
+sensorNames.put(fullSensorName, sensorDataPoint.sensorName);
 			ConcurrentSkipListMap<String, String> sensorValues = sensorData.get(sensorDataPoint.timestamp);
 			if (sensorValues == null) {
 				sensorValues = new ConcurrentSkipListMap<String, String>();
@@ -131,9 +131,7 @@ public class HtmlFileDataWriter extends Thread {
 			Boolean firstSensor = true;
 			while (sensorIt.hasNext()) {
 				String sensorName = sensorIt.next();
-				if (((deviceName == null) || sensorName.startsWith(deviceName))
-						&& ((accountMonitor.runParams.devicesToReport.isEmpty()
-								|| accountMonitor.runParams.devicesToReport.contains(sensorName)))) {
+				if (((deviceName == null) || sensorName.startsWith(deviceName))) {
 					StringBuilder sb1 = new StringBuilder("\t\t\t");
 					if (firstSensor) {
 						firstSensor = false;
