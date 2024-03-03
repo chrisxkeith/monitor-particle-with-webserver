@@ -266,28 +266,31 @@ public class HtmlFileDataWriter extends Thread {
 		return newMap;
 	}
 
-	private void addHeader(StringBuilder sb) {
+	private void addHeader(StringBuilder sb, List<String> sensorNamesInOrder) {
 		sb.append("Time,");
 		String sep = "";
-		List<String> sensorNamesInOrder = new ArrayList<String>();
-		Iterator<String> sensorNameIt = sensorNames.keySet().iterator();
+		Iterator<String> sensorNameIt = sensorNamesInOrder.iterator();
 		while (sensorNameIt.hasNext()) {
 			String sensorName = sensorNameIt.next();
 			sb.append(sep);
 			sep = ",";
 			sb.append(getDisplayNameForSensor(sensorName));
-			sensorNamesInOrder.add(sensorName);
 		}
 		sb.append("\n");
 	}
 
 	private StringBuilder getFullCSV(Boolean doAppend) {
+		List<String> sensorNamesInOrder = new ArrayList<String>();
+		Iterator<String> sensorNameIt = sensorNames.keySet().iterator();
+		while (sensorNameIt.hasNext()) {
+			String sensorName = sensorNameIt.next();
+			sensorNamesInOrder.add(sensorName);
+		}
 		StringBuilder sb = new StringBuilder();
 		if (!doAppend) {
-			addHeader(sb);
+			addHeader(sb, sensorNamesInOrder);
 		}
 		String sep = "";
-		List<String> sensorNamesInOrder = new ArrayList<String>();
 		ConcurrentSkipListMap<LocalDateTime, ConcurrentSkipListMap<String, String>> newMap =
 						createMapAtOneSecondResolution();
 		Iterator<LocalDateTime> sensorDataIt = newMap.keySet().iterator();
