@@ -325,7 +325,7 @@ public class HtmlFileDataWriter extends Thread {
 		Boolean doAppend = (new File(fileName)).exists();
 		FileWriter csvStream = new FileWriter(fileName, true);
 		try {
-			writeln(csvStream, getFullCSV(doAppend).toString());
+			csvStream.write(getFullCSV(doAppend).toString());
 		} finally {
 			csvStream.close();
 		}
