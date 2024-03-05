@@ -17,6 +17,10 @@ import javax.json.*;
 
 public class RunParams {
 
+	public record JsonDataset(String microcontrollerName, String particleEventName,
+								String jsonEventName, String displayName) {}
+	public ArrayList<JsonDataset> jsonDatasets = new ArrayList<JsonDataset>();
+
 	public class Dataset {
 		// microcontrollerName -> list of sensor names
 		Hashtable<String, HashMap<String, String>> microcontrollers;
@@ -33,21 +37,23 @@ public class RunParams {
 	public int	dataIntervalInMinutes = 10;
 	Hashtable<String, SheetConfig> sheets = new Hashtable<String, SheetConfig>();
 
-	private static String separator = "/";
-
-	private static void loadFromJson() throws FileNotFoundException {
+	private static RunParams loadFromJson() throws FileNotFoundException {
+		RunParams rp = new RunParams();
 		File datasetFile = Utils.findFile("src/main/resources/com/ckkeith/monitor/runparams.json");
 		JsonReader jsonReader = Json.createReader(new FileReader(datasetFile));
-		JsonArray a = jsonReader.readArray();
+		JsonObject mainObj = jsonReader.readObject();
+		rp.htmlWriteIntervalInSeconds = Integer.valueOf(((JsonNumber)mainObj.get("htmlWriteIntervalInSeconds")).intValue());
+		rp.dataIntervalInMinutes = Integer.valueOf(((JsonNumber)mainObj.get("dataIntervalInMinutes")).intValue());
+		JsonArray a = (JsonArray)mainObj.get("datasets");
 		for (JsonValue val : a) {
 			JsonObject obj = (JsonObject)val;
+			String microcontrollerName = ((JsonString)obj.get("microcontrollerName")).getString();
+			String particleEventName = ((JsonString)obj.get("particleEventName")).getString();
 			String jsonEventName = ((JsonString)obj.get("jsonEventName")).getString();
-			String fullSensorName = ((JsonString)obj.get("microcontrollerName")).getString()
-								+ separator
-								+ jsonEventName;
-			Utils.logToConsole("fullSensorName: " + fullSensorName + ", jsonEventName: " + jsonEventName);
-			// sensorNames.put(fullSensorName, ((JsonString)obj.get("jsonEventName")).getString());
+			String displayName = ((JsonString)obj.get("displayName")).getString();
+			rp.jsonDatasets.add(new JsonDataset(microcontrollerName, particleEventName, jsonEventName, displayName));			
 		}
+		return rp;
 	}
 
 	private static Integer getInteger(Element root, String name, Integer defaultValue) {

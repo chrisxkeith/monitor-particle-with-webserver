@@ -1,15 +1,19 @@
-[
-    {
-        "microcontrollerName" : "photon-01",
-        "particleEventName" : "vibration",
-        "jsonEventName" : "Washer weighted",
-        "displayName" : "Washer"
-    },
-    {
-        "microcontrollerName" : "photon-09",
-        "particleEventName" : "vibration",
-        "jsonEventName" : "Dryer weighted",
-        "displayName" : "Dryer"
-    }
-
-]
+{
+    "htmlWriteIntervalInSeconds" : 5,
+    "dataIntervalInMinutes" : 10,
+    "datasets" :
+    [
+        {
+            "microcontrollerName" : "photon-01",
+            "particleEventName" : "vibration",
+            "jsonEventName" : "Washer weighted",
+            "displayName" : "Washer"
+        },
+        {
+            "microcontrollerName" : "photon-09",
+            "particleEventName" : "vibration",
+            "jsonEventName" : "Dryer weighted",
+            "displayName" : "Dryer"
+        }
+    ]
+}
