@@ -26,8 +26,6 @@ public class RunParams {
 	};
 
 	public class SheetConfig {
-		public Integer				dataIntervalInMinutes = 20;
-		public Integer				writeIntervalInSeconds = 10;
 		public ArrayList<Dataset>	dataSets;
 	};
 
@@ -107,8 +105,7 @@ public class RunParams {
 		SheetConfig sheetConfig = new SheetConfig();
 		NodeList datasetElems = getNodeList(sheetElement, "dataSet");
 		sheetConfig.dataSets = buildDatasetList(datasetElems);
-		sheetConfig.dataIntervalInMinutes = Integer.valueOf(getNodeList(sheetElement, "dataIntervalInMinutes").item(0).getTextContent());
-		sheetConfig.writeIntervalInSeconds = Integer.valueOf(getNodeList(sheetElement, "writeIntervalInSeconds").item(0).getTextContent());
+		this.dataIntervalInMinutes = Integer.valueOf(getNodeList(sheetElement, "dataIntervalInMinutes").item(0).getTextContent());
 		return sheetConfig;
 	}
 
@@ -116,7 +113,6 @@ public class RunParams {
 		NodeList sheetIdList = getNodeList(sheetElement, "sheetId");
 		String sheetId = sheetIdList.item(0).getTextContent();
 		SheetConfig sc = loadSheetConfig(sheetElement);
-		this.dataIntervalInMinutes = sc.dataIntervalInMinutes;
 		sheets.put(sheetId, sc);
 	}
 
