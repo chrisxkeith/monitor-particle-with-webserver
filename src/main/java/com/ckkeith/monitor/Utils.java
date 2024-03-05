@@ -327,13 +327,15 @@ public class Utils {
 		if (f.exists()) {
 			return f;
 		}
-		f = new File("monitor-particle-with-webserver" + File.pathSeparator + fn);
+		Path currentRelativePath = Paths.get("");
+		String s = currentRelativePath.toAbsolutePath().toString();
+		Utils.logToConsole("No file: " + fn + ", current dir: " + s);
+		fn = "monitor-particle-with-webserver" + File.separator + fn;
+		f = new File(fn);
 		if (f.exists()) {
 			return f;
 		}
-		Path currentRelativePath = Paths.get("");
-		String s = currentRelativePath.toAbsolutePath().toString();
-		Utils.logToConsole("Can't find file: " + fn + ", current dir: " + s);
+		Utils.logToConsole("No file: " + fn + ", current dir: " + s);
 		return null;
 	}
 

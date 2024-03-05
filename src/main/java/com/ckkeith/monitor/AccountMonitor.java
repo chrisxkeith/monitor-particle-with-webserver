@@ -1,7 +1,6 @@
 // Please credit chris.keith@gmail.com
 package com.ckkeith.monitor;
 
-import java.io.File;
 import java.io.PrintStream;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -37,55 +36,18 @@ public class AccountMonitor extends Thread {
 			throw new Exception("No account name specified. particle-tokens.txt file should be: [particle_token][tab][particle_account_name]");
 		}
 		logFileName = Utils.getLogFileName(accountName, "devices-overview.txt");
-		loadParams();
-		for (Map.Entry<String, RunParams.SheetConfig> entry : runParams.sheets.entrySet()) {
-			for (RunParams.Dataset ds : entry.getValue().dataSets) {
-				for (String deviceName : ds.microcontrollers.keySet()) {
-					deviceNames.add(deviceName);
-				}
+		this.runParams = RunParams.loadFromJson();
+		Set<String> devicesSeen = new HashSet<String>();
+		for (RunParams.JsonDataset ds : runParams.jsonDatasets) {
+			if (!devicesSeen.contains(ds.microcontrollerName())) {
+				devicesSeen.add(ds.microcontrollerName());
+				deviceNames.add(ds.microcontrollerName());
 			}
 		}
 		if (deviceNames.size() == 0) {
 			Utils.logToConsole("No deviceNames for " + accountName);
 			System.exit(-1);
 		}
-	}
-
-	private void loadParamsFromFile() throws Exception {
-		String paramFileName = getParamFilePath();
-		Utils.logToConsole(accountName + ": loading params from: " + paramFileName);
-		runParams = RunParams.loadFromXML(paramFileName);
-	}
-
-	private void loadParams() throws Exception {
-		File f = new File(this.getParamCfgFilePath());
-		if (f.exists()) {
-			try {
-				loadParamsFromFile();
-			} catch (Throwable t1) {
-				Utils.logToConsole("Error loading params from file: " + f.getAbsolutePath());
-				System.exit(-1);
-			}
-		} else {
-			loadParamsFromFile();
-		}
-		if (Utils.isDebug) {
-			Utils.logToConsole(accountName + ": " + runParams.toString());
-		}
-	}
-
-	private String getParamFilePath(String fn) throws Exception {
-		return Utils.getHomeDir() + File.separator + "Documents" + File.separator + "tmp" + File.separator
-				+ Utils.getHostName() + File.separator + Utils.getSafeName(accountName) + File.separator
-				+ fn;
-	}
-
-	private String getParamFilePath() throws Exception {
-		return getParamFilePath("runparams.xml");
-	}
-
-	private String getParamCfgFilePath() throws Exception {
-		return getParamFilePath("runparams.id");
 	}
 
 	void startHtmlWriter() {

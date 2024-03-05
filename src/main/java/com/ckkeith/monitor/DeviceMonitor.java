@@ -3,9 +3,6 @@ package com.ckkeith.monitor;
 
 import java.io.PrintStream;
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
 
 public class DeviceMonitor extends Thread {
 
@@ -59,21 +56,10 @@ public class DeviceMonitor extends Thread {
 	}
 
 	private void subscribe() throws Exception {
-		for (Map.Entry<String, RunParams.SheetConfig> entry :
-					this.accountMonitor.runParams.sheets.entrySet()) {
-			Iterator<RunParams.Dataset> datasetIt = entry.getValue().dataSets.iterator();
-			while (datasetIt.hasNext()) {
-				RunParams.Dataset d = datasetIt.next();
-				for (Map.Entry<String, HashMap<String, String>> mc : d.microcontrollers.entrySet()) {
-					if (mc.getKey().equals(device.getName())) {
-						ParticleDeviceEvent cb = new ParticleDeviceEvent(accountMonitor, device);
-						cloud.subscribe(cb);
-						accountMonitor.addEventSubscriber(device.getName(), cb);
-						log("Subscribed to: " + device.getName());
-					}
-				}
-			}
-		}
+		ParticleDeviceEvent cb = new ParticleDeviceEvent(accountMonitor, device);
+		cloud.subscribe(cb);
+		accountMonitor.addEventSubscriber(device.getName(), cb);
+		log("Subscribed to: " + device.getName());
 	}
 
 	public void run() {
