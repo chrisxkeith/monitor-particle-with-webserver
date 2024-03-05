@@ -12,6 +12,8 @@ import java.io.ByteArrayInputStream;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -320,6 +322,21 @@ public class Utils {
         return sb;
     }
     
+	public static File findFile(String fn) {
+		File f = new File(fn);
+		if (f.exists()) {
+			return f;
+		}
+		f = new File("monitor-particle-with-webserver" + File.pathSeparator + fn);
+		if (f.exists()) {
+			return f;
+		}
+		Path currentRelativePath = Paths.get("");
+		String s = currentRelativePath.toAbsolutePath().toString();
+		Utils.logToConsole("Can't find file: " + fn + ", current dir: " + s);
+		return null;
+	}
+
 	public static void dumpToFile(List<List<Object>> values, String accountName) throws Exception {
         if (Utils.isDebug) {
             DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");

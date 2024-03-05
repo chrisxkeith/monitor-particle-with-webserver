@@ -1,6 +1,9 @@
 // Please credit chris.keith@gmail.com
 package com.ckkeith.monitor;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Hashtable;
@@ -9,6 +12,8 @@ import java.util.Map;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Node;
+
+import javax.json.*;
 
 public class RunParams {
 
@@ -30,6 +35,22 @@ public class RunParams {
 	public int	dataIntervalInMinutes = 10;
 	Hashtable<String, SheetConfig> sheets = new Hashtable<String, SheetConfig>();
 
+	private static String separator = "/";
+
+	private static void loadFromJson() throws FileNotFoundException {
+		File datasetFile = Utils.findFile("src/main/resources/com/ckkeith/monitor/runparams.json");
+		JsonReader jsonReader = Json.createReader(new FileReader(datasetFile));
+		JsonArray a = jsonReader.readArray();
+		for (JsonValue val : a) {
+			JsonObject obj = (JsonObject)val;
+			String jsonEventName = ((JsonString)obj.get("jsonEventName")).getString();
+			String fullSensorName = ((JsonString)obj.get("microcontrollerName")).getString()
+								+ separator
+								+ jsonEventName;
+			Utils.logToConsole("fullSensorName: " + fullSensorName + ", jsonEventName: " + jsonEventName);
+			// sensorNames.put(fullSensorName, ((JsonString)obj.get("jsonEventName")).getString());
+		}
+	}
 
 	private static Integer getInteger(Element root, String name, Integer defaultValue) {
 		NodeList nl = root.getElementsByTagName(name);
@@ -124,6 +145,7 @@ public class RunParams {
 	}
 
 	static RunParams loadFromXML(String filePath) throws Exception {
+		loadFromJson();
 		Element root = Utils.readTextFileIntoDOM(filePath).getDocumentElement();
 		return loadFromDOM(root);
 	}

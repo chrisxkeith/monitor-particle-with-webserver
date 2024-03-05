@@ -1,0 +1,15 @@
+[
+    {
+        "microcontrollerName" : "photon-01",
+        "particleEventName" : "vibration",
+        "jsonEventName" : "Washer weighted",
+        "displayName" : "Washer"
+    },
+    {
+        "microcontrollerName" : "photon-09",
+        "particleEventName" : "vibration",
+        "jsonEventName" : "Dryer weighted",
+        "displayName" : "Dryer"
+    }
+
+]
