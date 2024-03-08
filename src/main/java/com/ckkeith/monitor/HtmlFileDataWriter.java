@@ -11,10 +11,12 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentSkipListMap;
 
 public class HtmlFileDataWriter extends Thread {
@@ -25,9 +27,15 @@ public class HtmlFileDataWriter extends Thread {
 	private ConcurrentSkipListMap<String, String> sensorNames = new ConcurrentSkipListMap<String, String>();
 
 	private static String separator = "/";
+	Map<String, String> displayNameToSensorName = new HashMap<String, String>();
 
 	public HtmlFileDataWriter(AccountMonitor accountMonitor) {
 		this.accountMonitor = accountMonitor;
+		Iterator<RunParams.JsonDataset> sensorNameIt = accountMonitor.runParams.jsonDatasets.iterator();
+		while (sensorNameIt.hasNext()) {
+			RunParams.JsonDataset ds = sensorNameIt.next();
+			displayNameToSensorName.put(ds.displayName(), ds.microcontrollerName() + separator + ds.jsonEventName());
+		}
 	}
 	
 	public void addData(SensorDataPoint sensorDataPoint) {
@@ -264,44 +272,30 @@ sensorNames.put(fullSensorName, sensorDataPoint.sensorName);
 		return newMap;
 	}
 
-	private void addHeader(StringBuilder sb, List<String> sensorNamesInOrder) {
-		sb.append("Time,");
-		String sep = "";
-		Iterator<String> sensorNameIt = sensorNamesInOrder.iterator();
-		while (sensorNameIt.hasNext()) {
-			String sensorName = sensorNameIt.next();
-			sb.append(sep);
-			sep = ",";
-			sb.append(getDisplayNameForSensor(sensorName));
+	private void addHeader(StringBuilder sb) {
+		sb.append("Time");
+		for (Entry<String, String> displayNameToSensor : displayNameToSensorName.entrySet()) {
+			sb.append(",");
+			sb.append(displayNameToSensor.getKey());
 		}
 		sb.append("\n");
 	}
 
 	private StringBuilder getFullCSV(Boolean doAppend) {
-		List<String> sensorNamesInOrder = new ArrayList<String>();
-		Iterator<String> sensorNameIt = sensorNames.keySet().iterator();
-		while (sensorNameIt.hasNext()) {
-			String sensorName = sensorNameIt.next();
-			sensorNamesInOrder.add(sensorName);
-		}
 		StringBuilder sb = new StringBuilder();
 		if (!doAppend) {
-			addHeader(sb, sensorNamesInOrder);
+			addHeader(sb);
 		}
-		String sep = "";
 		ConcurrentSkipListMap<LocalDateTime, ConcurrentSkipListMap<String, String>> newMap =
 						createMapAtOneSecondResolution();
 		Iterator<LocalDateTime> sensorDataIt = newMap.keySet().iterator();
 		while (sensorDataIt.hasNext()) {
 			LocalDateTime timestamp = sensorDataIt.next();
 			sb.append(timestamp);
-			sb.append(",");
 			ConcurrentSkipListMap<String, String> entries = newMap.get(timestamp);
-			sep = "";
-			for (String sensorName : sensorNamesInOrder) {
-				String val = entries.get(sensorName);
-				sb.append(sep);
-				sep = ",";
+			for (Entry<String, String> displayNameToSensor : displayNameToSensorName.entrySet()) {
+				String val = entries.get(displayNameToSensor.getValue());
+				sb.append(",");
 				if (val != null) {
 					sb.append(val);
 				}
