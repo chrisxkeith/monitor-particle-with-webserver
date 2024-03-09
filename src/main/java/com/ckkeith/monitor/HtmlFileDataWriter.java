@@ -434,17 +434,10 @@ sensorNames.put(fullSensorName, sensorDataPoint.sensorName);
 		}
 	}
 
-	private record Animation(Integer duration) {}
-	private record TimeRecord(String min, String max) {}
-	private record TimeAxis(String type, TimeRecord time, Boolean display, String labelString) {}
-	private record Axis(Boolean display, String labelString) {}
-	private record Scales(TimeAxis[] xAxes, Axis[] yAxes) {}
-	private record Options(Boolean responsive, Animation animation, Scales scales) {}
 	private record Datapoint(String t, Integer y) {}
 	private record Dataset(String label, Integer lineTension, String borderColor, String backgroundColor, Object[] data) {}
-	public record FullJson(Object[] datasets, Options options) {}
-
-	public FullJson sensordata() {
+	
+	private List<Dataset> datasets() {
 		List<Dataset> datasetArray = new ArrayList<Dataset>();
 		Iterator<String> sensorIt = sensorNames.keySet().iterator();
 		while (sensorIt.hasNext()) {
@@ -464,6 +457,19 @@ sensorNames.put(fullSensorName, sensorDataPoint.sensorName);
 								"rgba(" + getNextColor() + ")", "rgba(0, 0, 0, 0.0)",
 								datapointArray.toArray()));
 		}
+		return datasetArray;
+	}
+
+	private record Animation(Integer duration) {}
+	private record TimeRecord(String min, String max) {}
+	private record TimeAxis(String type, TimeRecord time, Boolean display, String labelString) {}
+	private record Axis(Boolean display, String labelString) {}
+	private record Scales(TimeAxis[] xAxes, Axis[] yAxes) {}
+	private record Options(Boolean responsive, Animation animation, Scales scales) {}
+	public record FullJson(Object[] datasets, Options options) {}
+
+	public FullJson sensordata() {
+		List<Dataset> datasetArray = datasets();
 		LocalDateTime limits[] = findTimeLimits();
 		LocalDateTime max = LocalDateTime.now();
 		if (max.isBefore(limits[1])) {
