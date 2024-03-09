@@ -1,19 +1,27 @@
 <!DOCTYPE html>
 
 <html>
-
 <body>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.min.js"></script>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> 
 
 <canvas id="myChart" width="1500" height="600"></canvas>
 <script>
-var ctx = document.getElementById("myChart").getContext('2d');
+    var ctx = document.getElementById("myChart").getContext('2d');
 	var myChart = new Chart(ctx, {
 		type : 'line',
 		data : null
 	});
+    $.ajax({
+        type: 'GET',
+        url: 'http://localhost:8080/sensordata',
+        dataType: "json",
+        success: function (result, textStatus, jqXHR) {
+            myChart.data = result;
+            myChart.update();
+        }
+    });
 </script>
-
 </body>
 </html>
