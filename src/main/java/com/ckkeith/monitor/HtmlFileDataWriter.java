@@ -466,7 +466,8 @@ sensorNames.put(fullSensorName, sensorDataPoint.sensorName);
 	private record Axis(Boolean display, String labelString) {}
 	private record Scales(TimeAxis[] xAxes, Axis[] yAxes) {}
 	private record Options(Boolean responsive, Animation animation, Scales scales) {}
-	public record FullJson(Object[] datasets, Options options) {}
+	private record Datasetx(Object[] datasets, String[] labels) {}
+	public record FullJson(Datasetx datasets, Options options) {}
 
 	public FullJson sensordata() {
 		List<Dataset> datasetArray = datasets();
@@ -484,6 +485,6 @@ sensorNames.put(fullSensorName, sensorDataPoint.sensorName);
 		Scales scales = new Scales(xAxis, yAxis);
 		Animation animation = new Animation(0);
 		Options options = new Options(false, animation, scales);
-		return new FullJson(datasetArray.toArray(), options);
+		return new FullJson(new Datasetx(datasetArray.toArray(), new String[0]), options);
 	}
 }
