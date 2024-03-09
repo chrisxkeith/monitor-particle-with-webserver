@@ -8,22 +8,27 @@
 
 <canvas id="myChart" width="1500" height="600"></canvas>
 <script>
+    $(document).ready(function() {
+        setInterval(ajaxFunc, 3000);
+    })
     var ctx = document.getElementById("myChart").getContext('2d');
 	var myChart = new Chart(ctx, {
 		type : 'line',
 		data : {},
         options : {}
 	});
-    $.ajax({
-        type: 'GET',
-        url: 'http://localhost:8080/sensordata',
-        dataType: "json",
-        success: function (result, textStatus, jqXHR) {
-            myChart.data = result.datasets;
-            myChart.options = result.options;
-            myChart.update();
-        }
-    });
+    function ajaxFunc() {
+        $.ajax({
+            type: 'GET',
+            url: 'http://localhost:8080/sensordata',
+            dataType: "json",
+            success: function (result, textStatus, jqXHR) {
+                myChart.data = result.datasets;
+                myChart.options = result.options;
+                myChart.update();
+            }
+        });
+    }
 </script>
 </body>
 </html>
