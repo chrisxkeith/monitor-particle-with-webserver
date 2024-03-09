@@ -19,7 +19,7 @@ public class RunParams {
 	
 	public static RunParams loadFromJson() throws FileNotFoundException {
 		RunParams rp = new RunParams();
-		File datasetFile = Utils.findFile("src/main/resources/com/ckkeith/monitor/runparams.json");
+		File datasetFile = Utils.findResourceFile("runparams.json");
 		JsonReader jsonReader = Json.createReader(new FileReader(datasetFile));
 		JsonObject mainObj = jsonReader.readObject();
 		rp.htmlWriteIntervalInSeconds = Integer.valueOf(((JsonNumber)mainObj.get("htmlWriteIntervalInSeconds")).intValue());

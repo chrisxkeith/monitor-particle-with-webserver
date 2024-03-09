@@ -419,12 +419,9 @@ sensorNames.put(fullSensorName, sensorDataPoint.sensorName);
 
 	public void run() {
 		try {
-			Utils.logToConsole("writeCSV : " + getCSVFileName());
-			String safeFn = getHTMLFileName(null);
-			String fileName = Utils.getLogFileName(accountMonitor.accountName, safeFn + "NNN.html");
-			fileName = fileName.replace("NNN", "000");
-			Utils.logToConsole("writeHTML: " + fileName);
-			Utils.logToConsole("http://localhost:8080/sensordata");
+			Utils.logToConsole("CSV : " + getCSVFileName());
+			Utils.logToConsole("HTML: " + Utils.findResourceFile("sensorgraph.html").getAbsolutePath());
+			Utils.logToConsole("JSON: http://localhost:8080/sensordata");
 			while (true) {
 				fillEmpty();
 				writeHtml();

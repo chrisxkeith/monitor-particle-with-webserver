@@ -322,16 +322,17 @@ public class Utils {
         return sb;
     }
     
-	public static File findFile(String fn) {
-		File f = new File(fn);
+	public static File findResourceFile(String fn) {
+		String subPath = "src/main/resources/com/ckkeith/monitor/" + File.separator + fn;
+		File f = new File(subPath);
 		if (f.exists()) {
 			return f;
 		}
 		Path currentRelativePath = Paths.get("");
 		String s = currentRelativePath.toAbsolutePath().toString();
 		Utils.logToConsole("No file: " + fn + ", current dir: " + s);
-		fn = "monitor-particle-with-webserver" + File.separator + fn;
-		f = new File(fn);
+		subPath = "monitor-particle-with-webserver" + File.separator + subPath;
+		f = new File(subPath);
 		if (f.exists()) {
 			return f;
 		}
