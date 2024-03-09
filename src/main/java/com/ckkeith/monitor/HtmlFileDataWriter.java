@@ -442,9 +442,9 @@ sensorNames.put(fullSensorName, sensorDataPoint.sensorName);
 	private record Options(Boolean responsive, Animation animation, Scales scales) {}
 	private record Datapoint(String t, Integer y) {}
 	private record Dataset(String label, Integer lineTension, String borderColor, String backgroundColor, Object[] data) {}
-	public record Datasets(Object[] datasets, Options options) {}
+	public record FullJson(Object[] datasets, Options options) {}
 
-	public Datasets sensordata() {
+	public FullJson sensordata() {
 		List<Dataset> datasetArray = new ArrayList<Dataset>();
 		Iterator<String> sensorIt = sensorNames.keySet().iterator();
 		while (sensorIt.hasNext()) {
@@ -478,6 +478,6 @@ sensorNames.put(fullSensorName, sensorDataPoint.sensorName);
 		Scales scales = new Scales(xAxis, yAxis);
 		Animation animation = new Animation(0);
 		Options options = new Options(false, animation, scales);
-		return new Datasets(datasetArray.toArray(), options);
+		return new FullJson(datasetArray.toArray(), options);
 	}
 }
