@@ -12,16 +12,16 @@ public class Main {
 	public static void run() {
 		if (Utils.isDebug) {
 			Utils.logToConsole("main run starting : " + Utils.getCurrentThreadString());
-		}
-		try {
-			Utils.displayEnv();
-			String isRunningFrom;
+			String isRunningFrom; // not working correctly with Spring?
 			if (Utils.runFromTerminal() || Utils.isDebug) {
 				isRunningFrom = "terminal / debug";
 			} else {
 				isRunningFrom = "Task Scheduler / automatic";
 			}
 			Utils.logToConsole("Running from " + isRunningFrom);
+		}
+		try {
+			Utils.displayEnv();
 			String filePath = Utils.getHomeDir() + File.separator + "Documents" + File.separator + "particle-tokens.txt";
 			ArrayList<String> accountTokens = Utils.readParameterFile(filePath);
 			for (String c : accountTokens) {
