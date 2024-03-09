@@ -63,7 +63,9 @@ public class DeviceMonitor extends Thread {
 	}
 
 	public void run() {
-		log("DeviceMonitor thread started : " + Utils.getCurrentThreadString());
+		if (Utils.isDebug) {
+			log("DeviceMonitor thread started : " + Utils.getCurrentThreadString());
+		}
 		try {
 			if (ableToConnect()) {
 				subscribe();
@@ -72,7 +74,9 @@ public class DeviceMonitor extends Thread {
 			Utils.logToConsole("run() :\t" + e.getClass().getName() + "\t" + e.getMessage());
 			e.printStackTrace(new PrintStream(System.out));
 		}
-		log("DeviceMonitor thread exiting : " + Utils.getCurrentThreadString());
+		if (Utils.isDebug) {
+			log("DeviceMonitor thread exiting : " + Utils.getCurrentThreadString());
+		}
 	}
 
 }

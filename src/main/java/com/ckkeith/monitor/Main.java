@@ -10,7 +10,9 @@ public class Main {
 					new ArrayList<AccountMonitor>();
 
 	public static void run() {
-		Utils.logToConsole("main run starting : " + Utils.getCurrentThreadString());
+		if (Utils.isDebug) {
+			Utils.logToConsole("main run starting : " + Utils.getCurrentThreadString());
+		}
 		try {
 			Utils.displayEnv();
 			String isRunningFrom;
@@ -33,6 +35,8 @@ public class Main {
 			Utils.logToConsole("main() :\t" + e.getClass().getName() + "\t" + e.getMessage());
 			e.printStackTrace(new PrintStream(System.out));
 		}
-		Utils.logToConsole("main run ending : " + Utils.getCurrentThreadString());
+		if (Utils.isDebug) {
+			Utils.logToConsole("main run ending : " + Utils.getCurrentThreadString());
+		}
 	}
 }

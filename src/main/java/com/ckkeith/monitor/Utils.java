@@ -154,9 +154,13 @@ public class Utils {
 	}
 
 	public static void sleepUntil(String msg, LocalDateTime then) throws Exception {
-		Utils.logToConsole(msg + "\tAbout to sleep until\t" + then);
+		if (isDebug) {
+			Utils.logToConsole(msg + "\tAbout to sleep until\t" + then);
+		}
 		Thread.sleep(ChronoUnit.MILLIS.between(LocalDateTime.now(), then));
-		Utils.logToConsole(msg + "\tFinished sleeping, started at\t" + then);
+		if (isDebug) {
+			Utils.logToConsole(msg + "\tFinished sleeping, started at\t" + then);
+		}
 	}
 
 	public static ArrayList<String> readParameterFile(String parameterFilePath) throws Exception {
