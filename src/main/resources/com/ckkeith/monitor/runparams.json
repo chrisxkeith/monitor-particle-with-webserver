@@ -1,18 +1,18 @@
 {
     "htmlWriteIntervalInSeconds" : 5,
-    "dataIntervalInMinutes" : 10,
+    "dataIntervalInMinutes" : 240,
     "datasets" :
     [
         {
             "microcontrollerName" : "photon-01",
             "particleEventName" : "vibration",
-            "jsonEventName" : "Washer weighted",
+            "jsonEventName" : "Washer A0",
             "displayName" : "Washer"
         },
         {
             "microcontrollerName" : "photon-09",
             "particleEventName" : "vibration",
-            "jsonEventName" : "Dryer weighted",
+            "jsonEventName" : "Dryer A0",
             "displayName" : "Dryer"
         }
     ]
