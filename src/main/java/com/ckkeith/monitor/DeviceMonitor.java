@@ -2,21 +2,18 @@
 package com.ckkeith.monitor;
 
 import java.io.PrintStream;
-import java.time.LocalDateTime;
 
 public class DeviceMonitor extends Thread {
 
 	private String accessToken;
 	ParticleDevice device;
 	private ParticleCloud cloud;
-	private String logFileName;
 	private AccountMonitor accountMonitor;
 
 	public DeviceMonitor(AccountMonitor accountMonitor, ParticleDevice device, ParticleCloud cloud) throws Exception {
 		this.device = device;
 		this.cloud = cloud;
 		this.accountMonitor = accountMonitor;
-		logFileName = Utils.getLogFileName(accountMonitor.accountName, device.getName() + "_particle_log.txt");
 	}
 
 	public String toTabbedString() {
@@ -37,7 +34,6 @@ public class DeviceMonitor extends Thread {
 
 	private void log(String s) {
 		String msg = Utils.padWithSpaces(device.getName(), 20) + "\t" + s + "\t" + Utils.getHostName();
-		Utils.logWithGSheetsDate(LocalDateTime.now(), msg, logFileName);
 		Utils.logToConsole(msg);
 	}
 

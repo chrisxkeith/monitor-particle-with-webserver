@@ -15,7 +15,6 @@ public class AccountMonitor extends Thread {
 
 	String accessToken = null;
 	String accountName = null;
-	private String logFileName;
 	private Map<String, ParticleDeviceEvent> eventSubscribers = new HashMap<String, ParticleDeviceEvent>();
 	private HtmlFileDataWriter htmlFileDataWriter;
 	RunParams runParams;
@@ -35,7 +34,6 @@ public class AccountMonitor extends Thread {
 			Utils.logToConsole(this.accessToken);
 			throw new Exception("No account name specified. particle-tokens.txt file should be: [particle_token][tab][particle_account_name]");
 		}
-		logFileName = Utils.getLogFileName(accountName, "devices-overview.txt");
 		this.runParams = RunParams.loadFromJson();
 		Set<String> devicesSeen = new HashSet<String>();
 		for (RunParams.JsonDataset ds : runParams.jsonDatasets) {
@@ -72,7 +70,6 @@ public class AccountMonitor extends Thread {
 						// Get device variables and functions
 						device = device.getDevice("Bearer " + accessToken);
 						DeviceMonitor dm = new DeviceMonitor(this, device, c);
-						Utils.logWithGSheetsDate(LocalDateTime.now(), dm.toTabbedString(), logFileName);
 						deviceMonitors.put(device.getName(), dm);
 						newDevices.add(dm);
 						// Server returned HTTP response code: 502 for URL: https://api.particle.io/v1/devices/4b0050001151373331333230
@@ -106,7 +103,6 @@ public class AccountMonitor extends Thread {
 		if (Utils.isDebug) {
 			Utils.logToConsole(Utils.padWithSpaces(this.accountName, 20) +
 			"\tAccountMonitor thread starting : " + Utils.getCurrentThreadString());
-			Utils.logWithGSheetsDate(LocalDateTime.now(), "AccountMonitor thread starting.", logFileName, ",");
 		}
 		startDeviceMonitors();
 		if (Utils.isDebug) {

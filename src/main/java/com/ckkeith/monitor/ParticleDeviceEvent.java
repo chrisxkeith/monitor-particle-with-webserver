@@ -14,13 +14,11 @@ public class ParticleDeviceEvent extends AnyDeviceEvent {
 
 	protected ParticleDevice device;
 	protected AccountMonitor accountMonitor;
-	protected String logFileName;
 	private ParticleEvent mostRecentEvent;
 
 	public ParticleDeviceEvent(AccountMonitor accountMonitor, ParticleDevice device2) throws Exception {
 		this.device = device2;
 		this.accountMonitor = accountMonitor;
-		this.logFileName = Utils.getLogFileName(accountMonitor.accountName, device2.getName() + "_particle_log.txt");
 	}
 	
 	private void handleServerEvent(ParticleEvent e) {
@@ -42,7 +40,7 @@ public class ParticleDeviceEvent extends AnyDeviceEvent {
 			handleServerEvent(e);
 		} else {
 			LocalDateTime ldt = LocalDateTime.ofInstant(e.getPublishedAt().toInstant(), ZoneId.systemDefault());
-			String s = Utils.logWithGSheetsDate(ldt, e.toTabbedString(device), logFileName);
+			String s = Utils.logWithGSheetsDate(ldt, e.toTabbedString(device));
 			if (Utils.isDebug) {
 				Utils.logToConsole(s);
 			}
