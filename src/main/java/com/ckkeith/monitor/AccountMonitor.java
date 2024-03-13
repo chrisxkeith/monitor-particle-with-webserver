@@ -49,7 +49,7 @@ public class AccountMonitor extends Thread {
 	}
 
 	void startHtmlWriter() {
-		if (htmlFileDataWriter == null && runParams.htmlWriteIntervalInSeconds > 0) {
+		if (htmlFileDataWriter == null && runParams.csvWriteIntervalInSeconds > 0) {
 			htmlFileDataWriter = new HtmlFileDataWriter(this);
 			htmlFileDataWriter.start();
 			GreetingController.writer = htmlFileDataWriter;

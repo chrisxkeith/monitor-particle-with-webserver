@@ -1,5 +1,5 @@
 {
-    "htmlWriteIntervalInSeconds" : 5,
+    "csvWriteIntervalInSeconds" : 15,
     "dataIntervalInMinutes" : 240,
     "datasets" :
     [

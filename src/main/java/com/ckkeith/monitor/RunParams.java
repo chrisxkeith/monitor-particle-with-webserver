@@ -14,7 +14,7 @@ public class RunParams {
 								String jsonEventName, String displayName) {}
 	public ArrayList<JsonDataset> jsonDatasets = new ArrayList<JsonDataset>();
 
-	Integer		htmlWriteIntervalInSeconds = 5;
+	Integer		csvWriteIntervalInSeconds = 15;
 	public int	dataIntervalInMinutes = 10;
 	
 	public static RunParams loadFromJson() throws FileNotFoundException {
@@ -22,7 +22,7 @@ public class RunParams {
 		File datasetFile = Utils.findResourceFile("runparams.json");
 		JsonReader jsonReader = Json.createReader(new FileReader(datasetFile));
 		JsonObject mainObj = jsonReader.readObject();
-		rp.htmlWriteIntervalInSeconds = Integer.valueOf(((JsonNumber)mainObj.get("htmlWriteIntervalInSeconds")).intValue());
+		rp.csvWriteIntervalInSeconds = Integer.valueOf(((JsonNumber)mainObj.get("csvWriteIntervalInSeconds")).intValue());
 		rp.dataIntervalInMinutes = Integer.valueOf(((JsonNumber)mainObj.get("dataIntervalInMinutes")).intValue());
 		JsonArray a = (JsonArray)mainObj.get("datasets");
 		for (JsonValue val : a) {

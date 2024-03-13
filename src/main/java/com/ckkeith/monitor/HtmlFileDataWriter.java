@@ -221,7 +221,7 @@ sensorNames.put(fullSensorName, sensorDataPoint.sensorName);
 			while (true) {
 				fillEmpty();
 				this.writeCSV();
-				Thread.sleep(accountMonitor.runParams.htmlWriteIntervalInSeconds * 1000);
+				Thread.sleep(accountMonitor.runParams.csvWriteIntervalInSeconds * 1000);
 			}
 		} catch (Exception e) {
 			Utils.logToConsole(e.getMessage());
