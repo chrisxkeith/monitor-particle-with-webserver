@@ -14,6 +14,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentSkipListMap;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class HtmlFileDataWriter extends Thread {
 
@@ -179,6 +180,19 @@ sensorNames.put(fullSensorName, sensorDataPoint.sensorName);
 		}
 	}
 
+	private void writeJson() throws Exception {
+		String today = (new SimpleDateFormat("yyyy-MM-dd")).format(new java.util.Date());
+		String fileName =  Utils.getLogFileName(accountMonitor.accountName,
+							"sensordata-" + today + ".json");
+		FileWriter jsonStream = new FileWriter(fileName, false);
+		try {
+			ObjectMapper mapper = new ObjectMapper();
+			jsonStream.write(mapper.writeValueAsString(sensordata()));
+		} finally {
+			jsonStream.close();
+		}
+	}
+
 	String getHTMLFileName(String deviceName) throws Exception {
 		String safeFn;
 		if (deviceName == null) {
@@ -220,7 +234,8 @@ sensorNames.put(fullSensorName, sensorDataPoint.sensorName);
 			Utils.logToConsole("JSON: http://localhost:8080/sensordata");
 			while (true) {
 				fillEmpty();
-				this.writeCSV();
+				writeCSV();
+				writeJson();
 				Thread.sleep(accountMonitor.runParams.csvWriteIntervalInSeconds * 1000);
 			}
 		} catch (Exception e) {
