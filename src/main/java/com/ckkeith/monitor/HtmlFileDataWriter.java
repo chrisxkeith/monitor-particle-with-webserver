@@ -180,16 +180,35 @@ sensorNames.put(fullSensorName, sensorDataPoint.sensorName);
 		}
 	}
 
-	private void writeJson() throws Exception {
+	private void writeHtml() throws Exception {
 		String today = (new SimpleDateFormat("yyyy-MM-dd")).format(new java.util.Date());
 		String fileName =  Utils.getLogFileName(accountMonitor.accountName,
-							"sensordata-" + today + ".json");
-		FileWriter jsonStream = new FileWriter(fileName, false);
+							"sensordata-" + today + ".html");
+		FileWriter htmlStream = new FileWriter(fileName, false);
 		try {
+			htmlStream.write("<!DOCTYPE html>\r\n" + //
+								"\r\n" + //
+								"<html>\r\n" + //
+								"<body>\r\n" + //
+								"<script src=\"https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js\"></script>\r\n" + //
+								"<script src=\"https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.min.js\"></script>\r\n" + //
+								"\r\n" + //
+								"<canvas id=\"myChart\" width=\"1500\" height=\"600\"></canvas>\r\n" + //
+								"<script>\r\n" + //
+								"    var ctx = document.getElementById(\"myChart\").getContext('2d');\r\n" + //
+								"\tvar myChart = new Chart(ctx, {\r\n" + //
+								"\t\ttype : 'line',\r\n" + //
+								"\t\tdata : {\"datasets\": ");
 			ObjectMapper mapper = new ObjectMapper();
-			jsonStream.write(mapper.writeValueAsString(sensordata()));
+			htmlStream.write(mapper.writeValueAsString(datasets()));
+			htmlStream.write("}, \r\n\t\toptions: ");
+			htmlStream.write(mapper.writeValueAsString(options()));
+			htmlStream.write("\r\n\t});\r\n" + //
+								"</script>\r\n" + //
+								"</body>\r\n" + //
+								"</html>");
 		} finally {
-			jsonStream.close();
+			htmlStream.close();
 		}
 	}
 
@@ -224,23 +243,6 @@ sensorNames.put(fullSensorName, sensorDataPoint.sensorName);
 					prevEntries.put(sensorName, val);
 				}
 			}
-		}
-	}
-
-	public void run() {
-		try {
-			Utils.logToConsole("CSV : " + getCSVFileName());
-			Utils.logToConsole("HTML: " + Utils.findResourceFile("sensorgraph.html").getAbsolutePath());
-			Utils.logToConsole("JSON: http://localhost:8080/sensordata");
-			while (true) {
-				fillEmpty();
-				writeCSV();
-				writeJson();
-				Thread.sleep(accountMonitor.runParams.csvWriteIntervalInSeconds * 1000);
-			}
-		} catch (Exception e) {
-			Utils.logToConsole(e.getMessage());
-			e.printStackTrace();
 		}
 	}
 
@@ -296,8 +298,7 @@ sensorNames.put(fullSensorName, sensorDataPoint.sensorName);
 	private record Datasetx(Object[] datasets, String[] labels) {}
 	public record FullJson(Datasetx datasets, Options options) {}
 
-	public FullJson sensordata() {
-		List<Dataset> datasetArray = datasets();
+	private Options options() {
 		LocalDateTime limits[] = findTimeLimits();
 		LocalDateTime max = LocalDateTime.now();
 		if (max.isBefore(limits[1])) {
@@ -311,7 +312,27 @@ sensorNames.put(fullSensorName, sensorDataPoint.sensorName);
 		yAxis[0] = new Axis(true, "");
 		Scales scales = new Scales(xAxis, yAxis);
 		Animation animation = new Animation(0);
-		Options options = new Options(false, animation, scales);
-		return new FullJson(new Datasetx(datasetArray.toArray(), new String[0]), options);
+		return new Options(false, animation, scales);
+	}
+
+	public FullJson sensordata() {
+		return new FullJson(new Datasetx(datasets().toArray(), new String[0]), options());
+	}
+
+	public void run() {
+		try {
+			Utils.logToConsole("CSV : " + getCSVFileName());
+			Utils.logToConsole("HTML: " + Utils.findResourceFile("sensorgraph.html").getAbsolutePath());
+			Utils.logToConsole("JSON: http://localhost:8080/sensordata");
+			while (true) {
+				fillEmpty();
+				writeCSV();
+				writeHtml();
+				Thread.sleep(accountMonitor.runParams.csvWriteIntervalInSeconds * 1000);
+			}
+		} catch (Exception e) {
+			Utils.logToConsole(e.getMessage());
+			e.printStackTrace();
+		}
 	}
 }
