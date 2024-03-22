@@ -33,4 +33,4 @@ mkdir -p src/main/resources/com/ckkeith/monitor/	  					; if [ $? -ne 0 ] ; then
 echo "Copy src/main/resources/com/ckkeith/monitor/runparams.xml into "
 echo "~/Documents/tmp/your-machine-name/your-modified-particle-account-name and edit the copy."
 echo "Run from within VSC."
-echo "Verify using http://localhost:8080/greeting?name=frazzle"
+echo "Verify using http://localhost:8080/sensordata"
