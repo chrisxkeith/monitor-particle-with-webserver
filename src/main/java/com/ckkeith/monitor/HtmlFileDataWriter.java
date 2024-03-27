@@ -20,7 +20,8 @@ public class HtmlFileDataWriter extends Thread {
 
 	private AccountMonitor accountMonitor;
 	
-	private ConcurrentSkipListMap<LocalDateTime, ConcurrentSkipListMap<String, String>> sensorData = new ConcurrentSkipListMap<LocalDateTime, ConcurrentSkipListMap<String, String>>();
+	private ConcurrentSkipListMap<LocalDateTime, ConcurrentSkipListMap<String, String>> sensorData = 
+		new ConcurrentSkipListMap<LocalDateTime, ConcurrentSkipListMap<String, String>>();
 	private ConcurrentSkipListMap<String, String> sensorNames = new ConcurrentSkipListMap<String, String>();
 
 	private static String separator = "/";
@@ -33,6 +34,9 @@ public class HtmlFileDataWriter extends Thread {
 			RunParams.JsonDataset ds = sensorNameIt.next();
 			displayNameToSensorName.put(ds.displayName(), ds.microcontrollerName() + separator + ds.jsonEventName());
 		}
+		Utils.logToConsole("CSV : " + getCSVFileName());
+		Utils.logToConsole("HTML: " + Utils.findResourceFile("sensorgraph.html").getAbsolutePath());
+		Utils.logToConsole("JSON: http://localhost:8080/sensordata");
 	}
 	
 	public void addData(SensorDataPoint sensorDataPoint) {
@@ -162,10 +166,16 @@ sensorNames.put(fullSensorName, sensorDataPoint.sensorName);
 		return sb;
 	}
 
-	private String getCSVFileName() throws Exception {
+	private String getCSVFileName() {
 		String today = (new SimpleDateFormat("yyyy-MM-dd")).format(new java.util.Date());
-		return Utils.getLogFileName(accountMonitor.accountName,
-							"sensordata-" + today + ".csv");
+		try {
+			return Utils.getLogFileName(accountMonitor.accountName,
+								"sensordata-" + today + ".csv");
+		} catch (Exception e) {
+			Utils.logToConsole("Unable to getCSVFileName()");
+			e.printStackTrace();
+			return "";
+		}
 	}
 
 	private void writeCSV() throws Exception {
@@ -321,9 +331,6 @@ sensorNames.put(fullSensorName, sensorDataPoint.sensorName);
 
 	public void run() {
 		try {
-			Utils.logToConsole("CSV : " + getCSVFileName());
-			Utils.logToConsole("HTML: " + Utils.findResourceFile("sensorgraph.html").getAbsolutePath());
-			Utils.logToConsole("JSON: http://localhost:8080/sensordata");
 			while (true) {
 				fillEmpty();
 				writeCSV();
