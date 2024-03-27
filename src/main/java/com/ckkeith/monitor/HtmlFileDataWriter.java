@@ -16,7 +16,7 @@ import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentSkipListMap;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-public class HtmlFileDataWriter extends Thread {
+public class HtmlFileDataWriter implements Runnable {
 
 	private AccountMonitor accountMonitor;
 	
@@ -331,14 +331,11 @@ sensorNames.put(fullSensorName, sensorDataPoint.sensorName);
 
 	public void run() {
 		try {
-			while (true) {
-				fillEmpty();
-				writeCSV();
-				writeHtml();
-				Thread.sleep(accountMonitor.runParams.csvWriteIntervalInSeconds * 1000);
-			}
+			fillEmpty();
+			writeCSV();
+			writeHtml();
 		} catch (Exception e) {
-			Utils.logToConsole(e.getMessage());
+			Utils.logToConsole("HtmlFileDataWriter.run(): " + e.getMessage());
 			e.printStackTrace();
 		}
 	}

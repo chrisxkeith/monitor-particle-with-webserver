@@ -8,6 +8,10 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 
 import com.example.restservice.GreetingController;
 
@@ -20,6 +24,7 @@ public class AccountMonitor extends Thread {
 	RunParams runParams;
 	Map<String, DeviceMonitor> deviceMonitors = new HashMap<String, DeviceMonitor>();
 	Set<String> deviceNames = new HashSet<String>();
+	final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 
 	public AccountMonitor(String credentials) throws Exception {
 		String[] creds = credentials.split("\t");
@@ -51,7 +56,12 @@ public class AccountMonitor extends Thread {
 	void startHtmlWriter() {
 		if (htmlFileDataWriter == null && runParams.csvWriteIntervalInSeconds > 0) {
 			htmlFileDataWriter = new HtmlFileDataWriter(this);
-			htmlFileDataWriter.start();
+			final ScheduledFuture<?> writerHandle =
+				scheduler.scheduleAtFixedRate(htmlFileDataWriter, 0, 
+						runParams.csvWriteIntervalInSeconds, TimeUnit.SECONDS);
+			scheduler.schedule(new Runnable() {
+					public void run() { writerHandle.cancel(true); }
+			}, 24, TimeUnit.HOURS);
 			GreetingController.writer = htmlFileDataWriter;
 		}
 	}
