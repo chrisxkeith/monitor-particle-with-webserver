@@ -339,4 +339,13 @@ sensorNames.put(fullSensorName, sensorDataPoint.sensorName);
 			e.printStackTrace();
 		}
 	}
+
+    public String pastday(String theDay) {
+		try {
+			return Utils.getLogFileName(accountMonitor.accountName, "sensordata-" + theDay + ".html");
+		} catch (Exception e) {
+			e.printStackTrace();
+			return e.getMessage();
+		}
+    }
 }

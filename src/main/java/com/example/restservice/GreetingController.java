@@ -1,6 +1,7 @@
 package com.example.restservice;
 
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -18,5 +19,10 @@ public class GreetingController {
 	public HtmlFileDataWriter.FullJson sensordata(HttpServletResponse response) {
 		response.setHeader("Access-Control-Allow-Origin", "*");
 		return writer.sensordata();
+	}
+	@GetMapping("/pastday")
+	@ResponseBody
+	public String pastday(@RequestParam("theDay") String theDay) {
+		return writer.pastday(theDay);
 	}
 }
