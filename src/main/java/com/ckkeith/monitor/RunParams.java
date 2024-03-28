@@ -53,4 +53,14 @@ public class RunParams {
 		}
 		return deviceName + ":" + sensorName;
 	}
+
+	public String[] getDeviceAndSensor(String displayName) throws Exception {
+		for (JsonDataset ds : this.jsonDatasets) {
+			if (ds.displayName.equals(displayName)) {
+				String ret[] = { ds.microcontrollerName, ds.jsonEventName };
+				return ret;
+			}
+		}
+		throw new Exception("Unknown displayName:" + displayName );
+	}
 }

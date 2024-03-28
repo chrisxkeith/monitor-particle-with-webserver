@@ -1,7 +1,9 @@
 // Please credit chris.keith@gmail.com
 package com.ckkeith.monitor;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
@@ -42,7 +44,7 @@ public class HtmlFileDataWriter implements Runnable {
 	public void addData(SensorDataPoint sensorDataPoint) {
 		synchronized (this) {
 			String fullSensorName = sensorDataPoint.deviceName + separator + sensorDataPoint.sensorName;
-sensorNames.put(fullSensorName, sensorDataPoint.sensorName);
+			sensorNames.put(fullSensorName, sensorDataPoint.sensorName);
 			ConcurrentSkipListMap<String, String> sensorValues = sensorData.get(sensorDataPoint.timestamp);
 			if (sensorValues == null) {
 				sensorValues = new ConcurrentSkipListMap<String, String>();
@@ -190,10 +192,9 @@ sensorNames.put(fullSensorName, sensorDataPoint.sensorName);
 		}
 	}
 
-	private void writeHtml() throws Exception {
-		String today = (new SimpleDateFormat("yyyy-MM-dd")).format(new java.util.Date());
+	private void writeHtmlForDay(String theDay) throws Exception {
 		String fileName =  Utils.getLogFileName(accountMonitor.accountName,
-							"sensordata-" + today + ".html");
+							"sensordata-" + theDay + ".html");
 		FileWriter htmlStream = new FileWriter(fileName, false);
 		try {
 			htmlStream.write("<!DOCTYPE html>\r\n" + //
@@ -220,6 +221,10 @@ sensorNames.put(fullSensorName, sensorDataPoint.sensorName);
 		} finally {
 			htmlStream.close();
 		}
+	}
+
+	private void writeHtml() throws Exception {
+		writeHtmlForDay((new SimpleDateFormat("yyyy-MM-dd")).format(new java.util.Date()));
 	}
 
 	String getHTMLFileName(String deviceName) throws Exception {
@@ -329,6 +334,39 @@ sensorNames.put(fullSensorName, sensorDataPoint.sensorName);
 		return new FullJson(new Datasetx(datasets().toArray(), new String[0]), options());
 	}
 
+	private String readCSV(String theDay) {
+		try {
+			String fileName = Utils.getLogFileName(accountMonitor.accountName, "sensordata-" + theDay + ".csv");
+			if ((new File(fileName)).exists()) {
+				try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
+					String[] headers = br.readLine().split(",");
+					String line = br.readLine();
+					while (line != null) {
+						String[] vals = line.split(",");
+						LocalDateTime ldt = LocalDateTime.parse(vals[0]);
+						for (int i = 1; i < vals.length; i++) {
+							if (!vals[i].isEmpty()) {
+								String[] deviceAndSensor = accountMonitor.runParams.getDeviceAndSensor(headers[i]);
+								SensorDataPoint sensorDataPoint = new SensorDataPoint(ldt, deviceAndSensor[0], deviceAndSensor[1], vals[i]);
+								addData(sensorDataPoint);
+							}
+						}
+						line = br.readLine();
+					}
+				}
+				writeHtmlForDay(theDay);
+			}
+			return Utils.getLogFileName(accountMonitor.accountName, "sensordata-" + theDay + ".html");
+		} catch (Exception e) {
+			e.printStackTrace();
+			return e.getMessage();
+		}
+	}
+
+    public String pastday(String theDay) {
+		return readCSV(theDay);
+    }
+
 	public void run() {
 		try {
 			fillEmpty();
@@ -339,13 +377,4 @@ sensorNames.put(fullSensorName, sensorDataPoint.sensorName);
 			e.printStackTrace();
 		}
 	}
-
-    public String pastday(String theDay) {
-		try {
-			return Utils.getLogFileName(accountMonitor.accountName, "sensordata-" + theDay + ".html");
-		} catch (Exception e) {
-			e.printStackTrace();
-			return e.getMessage();
-		}
-    }
 }
