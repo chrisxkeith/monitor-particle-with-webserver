@@ -4,7 +4,7 @@
     "datasets" :
     [
         {
-            "microcontrollerName" : "photon-01",
+            "microcontrollerName" : "photon-08",
             "particleEventName" : "vibration",
             "jsonEventName" : "Washer A0",
             "displayName" : "Washer"
