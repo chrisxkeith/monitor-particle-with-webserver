@@ -10,7 +10,7 @@
             "displayName" : "Washer"
         },
         {
-            "microcontrollerName" : "photon-09",
+            "microcontrollerName" : "photon-01",
             "particleEventName" : "vibration",
             "jsonEventName" : "Dryer A0",
             "displayName" : "Dryer"
