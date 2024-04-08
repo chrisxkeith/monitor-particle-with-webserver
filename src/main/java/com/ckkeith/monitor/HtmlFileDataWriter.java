@@ -313,13 +313,8 @@ public class HtmlFileDataWriter implements Runnable {
 	private record Datasetx(Object[] datasets, String[] labels) {}
 	public record FullJson(Datasetx datasets, Options options) {}
 
-	private Options options() {
-		LocalDateTime limits[] = findTimeLimits();
-		LocalDateTime max = LocalDateTime.now();
-		if (max.isBefore(limits[1])) {
-			max = limits[1];
-		}
-		TimeRecord minMax = new TimeRecord(	Utils.googleSheetsDateFormat.format(limits[0]),
+	private static Options options(LocalDateTime min, LocalDateTime max) {
+		TimeRecord minMax = new TimeRecord(	Utils.googleSheetsDateFormat.format(min),
 											Utils.googleSheetsDateFormat.format(max));
 		TimeAxis[] xAxis = new TimeAxis[1];
 		xAxis[0] = new TimeAxis("time", minMax, true, "");
@@ -330,8 +325,26 @@ public class HtmlFileDataWriter implements Runnable {
 		return new Options(false, animation, scales);
 	}
 
+	private Options options() {
+		LocalDateTime limits[] = findTimeLimits();
+		LocalDateTime max = LocalDateTime.now();
+		if (max.isBefore(limits[1])) {
+			max = limits[1];
+		}
+		return options(limits[0], max);
+	}
+
+	private static Options nulloptions() {
+		LocalDateTime min = LocalDateTime.now();
+		return options(min, min.plusHours(1));
+	}
+
 	public FullJson sensordata() {
 		return new FullJson(new Datasetx(datasets().toArray(), new String[0]), options());
+	}
+
+	static public FullJson nullsensordata() {
+		return new FullJson(new Datasetx((new Dataset[0]), new String[0]), nulloptions());
 	}
 
 	private String readCSV(String theDay) {

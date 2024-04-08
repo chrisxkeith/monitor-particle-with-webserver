@@ -18,6 +18,9 @@ public class GreetingController {
 	@ResponseBody
 	public HtmlFileDataWriter.FullJson sensordata(HttpServletResponse response) {
 		response.setHeader("Access-Control-Allow-Origin", "*");
+		if (writer == null) {
+			return HtmlFileDataWriter.nullsensordata();
+		}
 		return writer.sensordata();
 	}
 	@GetMapping("/pastday")
