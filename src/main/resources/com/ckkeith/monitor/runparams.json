@@ -4,16 +4,22 @@
     "datasets" :
     [
         {
+            "microcontrollerName" : "photon-01",
+            "particleEventName" : "vibration",
+            "jsonEventName" : "Dryer A0",
+            "displayName" : "Dryer"
+        },
+        {
             "microcontrollerName" : "photon-08",
             "particleEventName" : "vibration",
             "jsonEventName" : "Washer A0",
             "displayName" : "Washer"
         },
         {
-            "microcontrollerName" : "photon-01",
+            "microcontrollerName" : "photon-15",
             "particleEventName" : "vibration",
-            "jsonEventName" : "Dryer A0",
-            "displayName" : "Dryer"
+            "jsonEventName" : "PHOTON_15 A0",
+            "displayName" : "PHOTON_15"
         }
     ]
 }
