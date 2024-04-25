@@ -78,7 +78,7 @@ public class ParticleDeviceEvent extends AnyDeviceEvent {
 		try {
 			handleEvent(event);
 		} catch (Exception ex) {
-			Utils.logToConsole("run()\t" + ex.getClass().getName() + "\t" + ex.getMessage());
+			Utils.logToConsole("event(Event e)\t" + ex.getClass().getName() + "\t" + ex.getMessage());
 			ex.printStackTrace(new PrintStream(System.out));
 		}
 	}
