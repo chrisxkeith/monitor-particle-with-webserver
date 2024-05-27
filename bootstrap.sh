@@ -27,6 +27,7 @@ git clone https://github.com/Walter-Stroebel/JParticle.git				; if [ $? -ne 0 ] 
 
 git clone https://github.com/chrisxkeith/${repo}.git	                ; if [ $? -ne 0 ] ; then exit -6 ; fi
 cp -R JParticle/src/* ${repo}/src/					                    ; if [ $? -ne 0 ] ; then exit -6 ; fi
+rm -rf JParticle/									                    ; if [ $? -ne 0 ] ; then exit -6 ; fi
 cd ~/Documents/Github/${repo}	  					                    ; if [ $? -ne 0 ] ; then exit -6 ; fi
 mkdir -p src/main/resources/com/ckkeith/monitor/	  					; if [ $? -ne 0 ] ; then exit -6 ; fi
 
