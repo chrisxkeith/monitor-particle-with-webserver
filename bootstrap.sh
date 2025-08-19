@@ -38,5 +38,6 @@ mkdir -p src/main/resources/com/ckkeith/monitor/	  					; if [ $? -ne 0 ] ; then
 
 cp src/main/resources/com/ckkeith/monitor/runparams.json ~/Documents/tmp/${HOSTNAME}/${particleAccountName}/
 echo "Edit the runparams.json copy as necessary."
+echo "Open src/main/java/com/example/restservice/RestServiceApplication.java"
 echo "Run from within VSC."
 echo "Verify using http://localhost:8080/sensordata"
