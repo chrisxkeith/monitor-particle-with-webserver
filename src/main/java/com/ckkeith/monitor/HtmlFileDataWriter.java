@@ -37,7 +37,7 @@ public class HtmlFileDataWriter implements Runnable {
 			displayNameToSensorName.put(ds.displayName(), ds.microcontrollerName() + separator + ds.jsonEventName());
 		}
 		Utils.logToConsole("CSV : " + getCSVFileName());
-		Utils.logToConsole("HTML: " + Utils.findResourceFile("sensorgraph.html").getAbsolutePath());
+		Utils.logToConsole("HTML: file://" + Utils.findResourceFile("sensorgraph.html").getAbsolutePath());
 		Utils.logToConsole("JSON: http://localhost:8080/sensordata");
 	}
 	
