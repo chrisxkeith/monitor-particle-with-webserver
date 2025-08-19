@@ -17,9 +17,14 @@ if [ -d ~/Documents/Github/${repo} ] ; then
 	exit -3
 fi
 
+if [[ ! ${HOSTNAME} ]] ; then
+	echo "No environment variable for HOSTNAME"
+	exit -4
+fi
 set -x
 # Edit the following line from chris-keith-gmail-com to your (modified) particle account name.
-mkdir -p ~/Documents/tmp/${HOSTNAME}/chris-keith-gmail-com				; if [ $? -ne 0 ] ; then exit -6 ; fi
+particleAccountName=chris-keith-gmail-com
+mkdir -p ~/Documents/tmp/${HOSTNAME}/${particleAccountName}				; if [ $? -ne 0 ] ; then exit -6 ; fi
 mkdir -p ~/Documents/Github												; if [ $? -ne 0 ] ; then exit -6 ; fi
 cd ~/Documents/Github													; if [ $? -ne 0 ] ; then exit -6 ; fi
 rm -rf JParticle/														; if [ $? -ne 0 ] ; then exit -6 ; fi
@@ -31,7 +36,7 @@ rm -rf JParticle/									                    ; if [ $? -ne 0 ] ; then exit -6 ;
 cd ~/Documents/Github/${repo}	  					                    ; if [ $? -ne 0 ] ; then exit -6 ; fi
 mkdir -p src/main/resources/com/ckkeith/monitor/	  					; if [ $? -ne 0 ] ; then exit -6 ; fi
 
-echo "Copy src/main/resources/com/ckkeith/monitor/runparams.xml into "
-echo "~/Documents/tmp/your-machine-name/your-modified-particle-account-name and edit the copy."
+cp src/main/resources/com/ckkeith/monitor/runparams.json ~/Documents/tmp/${HOSTNAME}/${particleAccountName}/
+echo "Edit the runparams.json copy as necessary."
 echo "Run from within VSC."
 echo "Verify using http://localhost:8080/sensordata"
