@@ -16,6 +16,12 @@
             "displayName" : "Washer top"
         },
         {
+            "microcontrollerName" : "photon-08",
+            "particleEventName" : "vibration",
+            "jsonValueName" : "max_in_publish_interval",
+            "displayName" : "Washer top"
+        },
+        {
             "microcontrollerName" : "photon-15",
             "particleEventName" : "vibration",
             "jsonValueName" : "max_in_publish_interval",
