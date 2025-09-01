@@ -49,22 +49,8 @@ public class ParticleDeviceEvent extends AnyDeviceEvent {
 				JSONObject deviceJson = new JSONObject(e.getData());
 				String[] names = JSONObject.getNames(deviceJson);
 				for (String name : names) {
-					String eventName;
-					String value;
-					Object o = deviceJson.get(name);
-					if (o.getClass().getName().equals("java.lang.String")) {
-						eventName = e.getName() + " " + name;
-						value = deviceJson.getString(name);
-					} else {
-						JSONObject jo = deviceJson.getJSONObject(name);
-						if (!jo.has("eventName")) {
-							System.out.println("No eventName in: " + deviceJson);
-							return;
-						}
-						eventName = jo.getString("eventName");
-						value = jo.getString("value");
-					}
-					accountMonitor.addDataPoint(ldt, device.getName(), eventName, value);
+					accountMonitor.addDataPoint(ldt, device.getName(), name,
+												deviceJson.get(name).toString());
 				}
 			} else {
 				Utils.logToConsole("Skipping non-JSON event: " + device.getName() + ", " + e.getName() + ", " + e.getData());

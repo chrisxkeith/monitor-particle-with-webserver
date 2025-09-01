@@ -34,7 +34,7 @@ public class HtmlFileDataWriter implements Runnable {
 		Iterator<RunParams.JsonDataset> sensorNameIt = accountMonitor.runParams.jsonDatasets.iterator();
 		while (sensorNameIt.hasNext()) {
 			RunParams.JsonDataset ds = sensorNameIt.next();
-			displayNameToSensorName.put(ds.displayName(), ds.microcontrollerName() + separator + ds.jsonEventName());
+			displayNameToSensorName.put(ds.displayName(), ds.microcontrollerName() + separator + ds.jsonValueName());
 		}
 		Utils.logToConsole("CSV : " + getCSVFileName());
 		Utils.logToConsole("HTML: file://" + Utils.findResourceFile("sensorgraph.html").getAbsolutePath());

@@ -11,7 +11,7 @@ import javax.json.*;
 public class RunParams {
 
 	public record JsonDataset(String microcontrollerName, String particleEventName,
-								String jsonEventName, String displayName) {}
+								String jsonValueName, String displayName) {}
 	public ArrayList<JsonDataset> jsonDatasets = new ArrayList<JsonDataset>();
 
 	Integer		csvWriteIntervalInSeconds = 15;
@@ -29,16 +29,17 @@ public class RunParams {
 			JsonObject obj = (JsonObject)val;
 			String microcontrollerName = ((JsonString)obj.get("microcontrollerName")).getString();
 			String particleEventName = ((JsonString)obj.get("particleEventName")).getString();
-			String jsonEventName = ((JsonString)obj.get("jsonEventName")).getString();
+			String jsonValueName = ((JsonString)obj.get("jsonValueName")).getString();
 			String displayName = ((JsonString)obj.get("displayName")).getString();
-			rp.jsonDatasets.add(new JsonDataset(microcontrollerName, particleEventName, jsonEventName, displayName));			
+			rp.jsonDatasets.add(new JsonDataset(microcontrollerName, particleEventName, 
+												jsonValueName, displayName));			
 		}
 		return rp;
 	}
 
 	public Boolean containsSensor(String deviceName, String sensorName) {
 		for (JsonDataset ds : this.jsonDatasets) {
-			if (ds.microcontrollerName.equals(deviceName) && ds.jsonEventName.equals(sensorName)) {
+			if (ds.microcontrollerName.equals(deviceName) && ds.jsonValueName.equals(sensorName)) {
 				return true;
 			}
 		}
@@ -47,7 +48,7 @@ public class RunParams {
 
 	public String getDisplayNameForSensor(String deviceName, String sensorName) {
 		for (JsonDataset ds : this.jsonDatasets) {
-			if (ds.microcontrollerName.equals(deviceName) && ds.jsonEventName.equals(sensorName)) {
+			if (ds.microcontrollerName.equals(deviceName) && ds.jsonValueName.equals(sensorName)) {
 				return ds.displayName;
 			}
 		}
@@ -57,7 +58,7 @@ public class RunParams {
 	public String[] getDeviceAndSensor(String displayName) throws Exception {
 		for (JsonDataset ds : this.jsonDatasets) {
 			if (ds.displayName.equals(displayName)) {
-				String ret[] = { ds.microcontrollerName, ds.jsonEventName };
+				String ret[] = { ds.microcontrollerName, ds.jsonValueName };
 				return ret;
 			}
 		}

@@ -6,20 +6,20 @@
         {
             "microcontrollerName" : "photon-01",
             "particleEventName" : "vibration",
-            "jsonEventName" : "Dryer A0",
-            "displayName" : "Dryer"
+            "jsonValueName" : "max_in_publish_interval",
+            "displayName" : "Dryer top"
         },
         {
-            "microcontrollerName" : "photon-08",
+            "microcontrollerName" : "photon-07",
             "particleEventName" : "vibration",
-            "jsonEventName" : "Washer A0",
-            "displayName" : "Washer"
+            "jsonValueName" : "max_in_publish_interval",
+            "displayName" : "Washer top"
         },
         {
             "microcontrollerName" : "photon-15",
             "particleEventName" : "vibration",
-            "jsonEventName" : "PHOTON_15 A0",
-            "displayName" : "PHOTON_15"
+            "jsonValueName" : "max_in_publish_interval",
+            "displayName" : "Dryer side"
         }
     ]
 }
