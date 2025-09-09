@@ -10,6 +10,12 @@
             "displayName" : "Dryer top"
         },
         {
+            "microcontrollerName" : "photon-07",
+            "particleEventName" : "vibration",
+            "jsonValueName" : "max_in_publish_interval",
+            "displayName" : "test"
+        },
+        {
             "microcontrollerName" : "photon-08",
             "particleEventName" : "vibration",
             "jsonValueName" : "max_in_publish_interval",
