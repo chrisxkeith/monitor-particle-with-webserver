@@ -31,6 +31,8 @@ import org.apache.commons.lang3.SystemUtils;
 import org.w3c.dom.Document;
 
 public class Utils {
+	public static final SimpleDateFormat logDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssX");
+
 	public static String getHomeDir() throws Exception {
 		String d = System.getProperty("user.home");
 		if (d == null || d.isEmpty()) {
@@ -50,10 +52,13 @@ public class Utils {
 		return d;
 	}
 
-	public static final boolean isDebug = java.lang.management.ManagementFactory.getRuntimeMXBean().getInputArguments()
-			.toString().indexOf("jdwp") >= 0;
+	public static final boolean isDebug = getIsDebug();
 
-	public static final SimpleDateFormat logDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssX");
+	public static boolean getIsDebug() {
+		String args = java.lang.management.ManagementFactory.getRuntimeMXBean().getInputArguments().toString();
+		// Utils.logToConsole(args); // was "[-XX:+ShowCodeDetailsInExceptionMessages]""
+		return args.indexOf("jdwp") >= 0;
+	}
 
 	public static String padWithSpaces(String s, int length) {
 		StringBuffer ret = new StringBuffer(s);

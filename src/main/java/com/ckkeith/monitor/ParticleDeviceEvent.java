@@ -53,7 +53,9 @@ public class ParticleDeviceEvent extends AnyDeviceEvent {
 												deviceJson.get(name).toString());
 				}
 			} else {
-				Utils.logToConsole("Skipping non-JSON event: " + device.getName() + ", " + e.getName() + ", " + e.getData());
+				if (Utils.isDebug) {
+					Utils.logToConsole("Skipping non-JSON event: " + device.getName() + ", " + e.getName() + ", " + e.getData());
+				}
 			}
 		}
 	}

@@ -138,7 +138,9 @@ public class AccountMonitor extends Thread {
 				}
 			}
 		} else {
-		 	Utils.logToConsole("Skipping event: " + deviceName + ", " + event + ", " + data);
+		 	if (Utils.isDebug) {
+				Utils.logToConsole("Skipping event: " + deviceName + ", " + event + ", " + data);
+			}
 		}
 	}
 

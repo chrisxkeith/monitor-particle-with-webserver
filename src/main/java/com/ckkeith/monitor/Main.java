@@ -19,9 +19,9 @@ public class Main {
 				isRunningFrom = "Task Scheduler / automatic";
 			}
 			Utils.logToConsole("Running from " + isRunningFrom);
+			Utils.displayEnv();
 		}
 		try {
-			Utils.displayEnv();
 			String filePath = Utils.getHomeDir() + File.separator + "Documents" + File.separator + "particle-tokens.txt";
 			ArrayList<String> accountTokens = Utils.readParameterFile(filePath);
 			for (String c : accountTokens) {
