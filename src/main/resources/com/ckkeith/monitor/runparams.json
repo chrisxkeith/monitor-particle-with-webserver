@@ -10,10 +10,16 @@
             "displayName" : "Dryer top"
         },
         {
+            "microcontrollerName" : "photon-05",
+            "particleEventName" : "vibration",
+            "jsonValueName" : "max_in_publish_interval",
+            "displayName" : "Test Unit 05"
+        },
+        {
             "microcontrollerName" : "photon-07",
             "particleEventName" : "vibration",
             "jsonValueName" : "max_in_publish_interval",
-            "displayName" : "test"
+            "displayName" : "Test Unit 07"
         },
         {
             "microcontrollerName" : "photon-08",
@@ -25,7 +31,7 @@
             "microcontrollerName" : "photon-15",
             "particleEventName" : "vibration",
             "jsonValueName" : "max_in_publish_interval",
-            "displayName" : "Dryer side"
+            "displayName" : "Test Unit 15"
         }
     ]
 }
