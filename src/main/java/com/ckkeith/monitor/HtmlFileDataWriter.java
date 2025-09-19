@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -152,6 +153,7 @@ public class HtmlFileDataWriter implements Runnable {
 		ConcurrentSkipListMap<LocalDateTime, ConcurrentSkipListMap<String, String>> newMap =
 						createMapAtOneSecondResolution();
 		Iterator<LocalDateTime> sensorDataIt = newMap.keySet().iterator();
+		ConcurrentSkipListMap<String, String> prevEntries = null;
 		while (sensorDataIt.hasNext()) {
 			LocalDateTime timestamp = sensorDataIt.next();
 			sb.append(timestamp);
@@ -161,9 +163,17 @@ public class HtmlFileDataWriter implements Runnable {
 				sb.append(",");
 				if (val != null) {
 					sb.append(val);
+				} else {
+					if (prevEntries != null) {
+						String prevVal = prevEntries.get(displayNameToSensor.getValue());
+						if (prevVal != null) {
+							sb.append(prevVal);
+						}
+					}
 				}
 			}
 			sb.append("\n");
+			prevEntries = entries;
 		}
 		return sb;
 	}
