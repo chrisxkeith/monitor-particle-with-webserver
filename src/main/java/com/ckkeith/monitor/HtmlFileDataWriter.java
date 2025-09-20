@@ -143,7 +143,8 @@ public class HtmlFileDataWriter implements Runnable {
 		}
 		sb.append("\n");
 	}
-
+	
+	private ConcurrentSkipListMap<String, String> prevValues = new ConcurrentSkipListMap<String, String>();
 	private StringBuilder getFullCSV(Boolean doAppend) {
 		StringBuilder sb = new StringBuilder();
 		if (!doAppend) {
@@ -152,9 +153,6 @@ public class HtmlFileDataWriter implements Runnable {
 		ConcurrentSkipListMap<LocalDateTime, ConcurrentSkipListMap<String, String>> newMap =
 						createMapAtOneSecondResolution();
 		Iterator<LocalDateTime> sensorDataIt = newMap.keySet().iterator();
-
-		// TO DO: Get values from file when appending
-		ConcurrentSkipListMap<String, String> prevValues = new ConcurrentSkipListMap<String, String>();
 		while (sensorDataIt.hasNext()) {
 			LocalDateTime timestamp = sensorDataIt.next();
 			sb.append(timestamp);
