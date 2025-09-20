@@ -153,27 +153,27 @@ public class HtmlFileDataWriter implements Runnable {
 		ConcurrentSkipListMap<LocalDateTime, ConcurrentSkipListMap<String, String>> newMap =
 						createMapAtOneSecondResolution();
 		Iterator<LocalDateTime> sensorDataIt = newMap.keySet().iterator();
-		ConcurrentSkipListMap<String, String> prevEntries = null;
+
+		// TO DO: Get values from file when appending
+		ConcurrentSkipListMap<String, String> prevValues = new ConcurrentSkipListMap<String, String>();
 		while (sensorDataIt.hasNext()) {
 			LocalDateTime timestamp = sensorDataIt.next();
 			sb.append(timestamp);
 			ConcurrentSkipListMap<String, String> entries = newMap.get(timestamp);
 			for (Entry<String, String> displayNameToSensor : displayNameToSensorName.entrySet()) {
-				String val = entries.get(displayNameToSensor.getValue());
 				sb.append(",");
+				String val = entries.get(displayNameToSensor.getValue());
 				if (val != null) {
 					sb.append(val);
+					prevValues.put(displayNameToSensor.getValue(), val);
 				} else {
-					if (prevEntries != null) {
-						String prevVal = prevEntries.get(displayNameToSensor.getValue());
-						if (prevVal != null) {
-							sb.append(prevVal);
-						}
+					String prevVal = prevValues.get(displayNameToSensor.getValue());
+					if (prevVal != null) {
+						sb.append(prevVal);
 					}
 				}
 			}
 			sb.append("\n");
-			prevEntries = entries;
 		}
 		return sb;
 	}
