@@ -3,8 +3,7 @@
 
 mvn --version
 if [ $? -ne 0 ] ; then
-	echo "Please install maven."
-	exit -1
+	echo "No maven install detected. Continuing."
 fi
 echo ""
 if [ ! -f ~/Documents/particle-tokens.txt ] ; then
