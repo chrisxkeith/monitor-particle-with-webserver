@@ -7,6 +7,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -108,9 +109,9 @@ public class HtmlFileDataWriter implements Runnable {
 		}
 	}
 
-	private LocalDateTime lastTimeStampWrittenToFile = LocalDateTime.of(1900, 1, 1, 0, 0);
 	private ConcurrentSkipListMap<LocalDateTime, ConcurrentSkipListMap<String, String>>
-				createMapAtOneSecondResolution() {
+				createMapAtFiveSecondResolution() {
+		ZoneId zoneId = ZoneId.systemDefault();
 		ConcurrentSkipListMap<LocalDateTime, ConcurrentSkipListMap<String, String>> newMap =
 				new ConcurrentSkipListMap<LocalDateTime, ConcurrentSkipListMap<String, String>>();
 		Iterator<LocalDateTime> sensorDataIt = sensorData.keySet().iterator();
@@ -118,7 +119,9 @@ public class HtmlFileDataWriter implements Runnable {
 		while (sensorDataIt.hasNext()) {
 			LocalDateTime timestamp = sensorDataIt.next();
 			LocalDateTime timestampInSeconds = timestamp.truncatedTo(ChronoUnit.SECONDS);
-			if (timestampInSeconds.isAfter(lastTimeStampWrittenToFile)) {
+			long currentEpochSeconds = timestampInSeconds.atZone(zoneId).toEpochSecond();
+			long previousEpochSeconds = lastTimeStamp.atZone(zoneId).toEpochSecond();
+			if (currentEpochSeconds - previousEpochSeconds >= 5) {
 				ConcurrentSkipListMap<String, String> oldEntries = sensorData.get(timestamp);
 				ConcurrentSkipListMap<String, String> newEntries = newMap.get(timestampInSeconds);
 				if (newEntries == null) {
@@ -131,7 +134,6 @@ public class HtmlFileDataWriter implements Runnable {
 				lastTimeStamp = timestampInSeconds;
 			}
 		}
-		lastTimeStampWrittenToFile = lastTimeStamp;
 		return newMap;
 	}
 
@@ -151,7 +153,7 @@ public class HtmlFileDataWriter implements Runnable {
 			addHeader(sb);
 		}
 		ConcurrentSkipListMap<LocalDateTime, ConcurrentSkipListMap<String, String>> newMap =
-						createMapAtOneSecondResolution();
+						createMapAtFiveSecondResolution();
 		Iterator<LocalDateTime> sensorDataIt = newMap.keySet().iterator();
 		while (sensorDataIt.hasNext()) {
 			LocalDateTime timestamp = sensorDataIt.next();
