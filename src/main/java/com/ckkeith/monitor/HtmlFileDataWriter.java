@@ -147,11 +147,9 @@ public class HtmlFileDataWriter implements Runnable {
 	}
 	
 	private ConcurrentSkipListMap<String, String> prevValues = new ConcurrentSkipListMap<String, String>();
-	private StringBuilder getFullCSV(Boolean doAppend) {
+	private StringBuilder getFullCSV() {
 		StringBuilder sb = new StringBuilder();
-		if (!doAppend) {
-			addHeader(sb);
-		}
+		addHeader(sb);
 		ConcurrentSkipListMap<LocalDateTime, ConcurrentSkipListMap<String, String>> newMap =
 						createMapAtFiveSecondResolution();
 		Iterator<LocalDateTime> sensorDataIt = newMap.keySet().iterator();
@@ -192,10 +190,9 @@ public class HtmlFileDataWriter implements Runnable {
 	private void writeCSV() throws Exception {
 		deleteOldData();
 		String fileName = getCSVFileName();
-		Boolean doAppend = (new File(fileName)).exists();
-		FileWriter csvStream = new FileWriter(fileName, true);
+		FileWriter csvStream = new FileWriter(fileName, false);
 		try {
-			csvStream.write(getFullCSV(doAppend).toString());
+			csvStream.write(getFullCSV().toString());
 		} finally {
 			csvStream.close();
 		}
