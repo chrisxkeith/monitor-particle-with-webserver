@@ -3,6 +3,7 @@ package com.ckkeith.monitor;
 
 import java.io.PrintStream;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -66,46 +67,54 @@ public class AccountMonitor extends Thread {
 		}
 	}
 	void startDeviceMonitors() {
-		startHtmlWriter();
-		ParticleCloud c = new ParticleCloud("Bearer " + accessToken, true, false);
-		ArrayList<DeviceMonitor> newDevices = new ArrayList<DeviceMonitor>();
-		for (ParticleDevice device : c.getDevices()) {
-			try {
-				if (deviceNames.contains(device.getName()) && deviceMonitors.get(device.getName()) == null) {
-					if (!device.getConnected()) {
-						if (!Utils.isDebug) {
-							Utils.logToConsole("Skipping disconnected device : " + device.getName());
-						}
-					} else {
-						// Get device variables and functions
-						device = device.getDevice("Bearer " + accessToken);
-						DeviceMonitor dm = new DeviceMonitor(this, device, c);
-						deviceMonitors.put(device.getName(), dm);
-						newDevices.add(dm);
-						// Server returned HTTP response code: 502 for URL: https://api.particle.io/v1/devices/4b0050001151373331333230
-						if (Utils.isDebug) {
-							Thread.sleep(3 * 1000);
+		while (deviceMonitors.size() < 2) {
+			ParticleCloud c = new ParticleCloud("Bearer " + accessToken, true, false);
+			ArrayList<DeviceMonitor> newDevices = new ArrayList<DeviceMonitor>();
+			for (ParticleDevice device : c.getDevices()) {
+				try {
+					if (deviceNames.contains(device.getName()) && deviceMonitors.get(device.getName()) == null) {
+						if (!device.getConnected()) {
+							if (!Utils.isDebug) {
+								Utils.logToConsole("Skipping disconnected device : " + device.getName());
+							}
 						} else {
-							LocalDateTime then = LocalDateTime.now().plusSeconds(3);
-							Utils.sleepUntil(
-								"AccountMonitor.startDeviceMonitors() sleeping to try to avoid \"Too many requests\" (http 502) error for: "
-										+ device.getName(),
-								then);
+							// Get device variables and functions
+							device = device.getDevice("Bearer " + accessToken);
+							DeviceMonitor dm = new DeviceMonitor(this, device, c);
+							deviceMonitors.put(device.getName(), dm);
+							newDevices.add(dm);
+							// Server returned HTTP response code: 502 for URL: https://api.particle.io/v1/devices/4b0050001151373331333230
+							if (Utils.isDebug) {
+								Thread.sleep(3 * 1000);
+							} else {
+								LocalDateTime then = LocalDateTime.now().plusSeconds(3);
+								Utils.sleepUntil(
+									"AccountMonitor.startDeviceMonitors() sleeping to try to avoid \"Too many requests\" (http 502) error for: "
+											+ device.getName(),
+									then);
+							}
 						}
 					}
+				} catch (Exception e) {
+					String err = "run() :\t" + device.getName() + "\t" + e.getClass().getName() + "\t" + e.getMessage();
+					Utils.logToConsole(err);
+					e.printStackTrace(new PrintStream(System.out));
 				}
-			} catch (Exception e) {
-				String err = "run() :\t" + device.getName() + "\t" + e.getClass().getName() + "\t" + e.getMessage();
-				Utils.logToConsole(err);
-				e.printStackTrace(new PrintStream(System.out));
 			}
-		}
-		if (newDevices.size() == 0) {
-			Utils.logToConsole("Didn't find any devices for : " + accountName);
-			System.exit(-6);
-		}
-		for (DeviceMonitor dm : newDevices) {
-			dm.start();
+			for (DeviceMonitor dm : newDevices) {
+				dm.start();
+			}
+			if (deviceMonitors.size() < 2) { // dryer and washer
+				try {
+					Utils.logToConsole("AccountMonitor.startDeviceMonitors() sleeping before trying to find 2 devices for account: " + accountName +
+							", found " + deviceMonitors.size() + " devices so far.");
+					Thread.sleep(ChronoUnit.MILLIS.between(LocalDateTime.now(), LocalDateTime.now().plusSeconds(30)));
+				} catch (Exception e) {
+					Utils.logToConsole("AccountMonitor.startDeviceMonitors(): Error sleeping: " + e.getMessage() + " exiting");
+					e.printStackTrace();
+					System.exit(-666);
+				}
+			}
 		}
 	}
 
@@ -114,6 +123,7 @@ public class AccountMonitor extends Thread {
 			Utils.logToConsole(Utils.padWithSpaces(this.accountName, 20) +
 			"\tAccountMonitor thread starting : " + Utils.getCurrentThreadString());
 		}
+		startHtmlWriter();
 		startDeviceMonitors();
 		if (Utils.isDebug) {
 			Utils.logToConsole(Utils.padWithSpaces(this.accountName, 20) +

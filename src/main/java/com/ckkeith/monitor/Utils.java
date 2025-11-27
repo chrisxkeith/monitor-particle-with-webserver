@@ -362,6 +362,6 @@ public class Utils {
 	
 	public static String getCurrentThreadString() {
 		Thread currentThread = Thread.currentThread();
-		return currentThread.getName() + "[" + currentThread.getId() + "]";
+		return currentThread.getName();
 	}
 }
