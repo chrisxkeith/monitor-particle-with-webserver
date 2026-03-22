@@ -28,6 +28,12 @@
             "displayName" : "Washer top"
         },
         {
+            "microcontrollerName" : "photon-10",
+            "particleEventName" : "vibration",
+            "jsonValueName" : "max_in_publish_interval",
+            "displayName" : "Test Unit 10"
+        },
+        {
             "microcontrollerName" : "photon-15",
             "particleEventName" : "vibration",
             "jsonValueName" : "max_in_publish_interval",
