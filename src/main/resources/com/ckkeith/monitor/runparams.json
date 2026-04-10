@@ -10,6 +10,12 @@
             "displayName" : "Dryer top"
         },
         {
+            "microcontrollerName" : "photon-01",
+            "particleEventName" : "vibration",
+            "jsonValueName" : "b",
+            "displayName" : "Dryer button"
+        },
+        {
             "microcontrollerName" : "photon-05",
             "particleEventName" : "vibration",
             "jsonValueName" : "max_in_publish_interval",
@@ -25,7 +31,13 @@
             "microcontrollerName" : "photon-08",
             "particleEventName" : "vibration",
             "jsonValueName" : "max_in_publish_interval",
-            "displayName" : "Washer top"
+            "displayName" : "Test Unit 08 vibration"
+        },
+        {
+            "microcontrollerName" : "photon-08",
+            "particleEventName" : "vibration",
+            "jsonValueName" : "b",
+            "displayName" : "Test Unit 08 Button"
         },
         {
             "microcontrollerName" : "photon-10",
@@ -37,7 +49,13 @@
             "microcontrollerName" : "photon-15",
             "particleEventName" : "vibration",
             "jsonValueName" : "max_in_publish_interval",
-            "displayName" : "Test Unit 15"
+            "displayName" : "Washer top"
+        },
+        {
+            "microcontrollerName" : "photon-15",
+            "particleEventName" : "vibration",
+            "jsonValueName" : "b",
+            "displayName" : "Washer button"
         }
     ]
 }
